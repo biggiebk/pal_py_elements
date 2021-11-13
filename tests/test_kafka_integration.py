@@ -5,22 +5,21 @@ In order for tests to run need to make sure that PYTHONPATH contains the pal/lib
 """
 import time
 import threading
-from pal_element_consumer import Pal_Element_Consumer
-from pal_element_producer import Pal_Element_Producer
+from pal_element_consumer import PalElementConsumer
+from pal_element_producer import PalElementProducer
 
 # content of test_sample.py
 def kafka_event():
 	"""
 		function to enable testing of both the producer and consumer in elements
 	"""
-	element_consumer = Pal_Element_Consumer('tests/element_test.json')
-	# Start the consu
+	element_consumer = PalElementConsumer('tests/settings_test.json')
+	# Start the consumer
 	thread = threading.Thread(target=element_consumer.listen, args=())
 	thread.setDaemon(True)
 	thread.start()
-	#element.consumer()
 	time.sleep(1)
-	element_producer = Pal_Element_Producer('tests/element_test.json')
+	element_producer = PalElementProducer('tests/settings_test.json')
 	element_producer.send_txt("TestTopic","I see you")
 	time.sleep(1)
 

@@ -4,12 +4,14 @@ Description: Contains the Element parent class
 """
 
 from kafka import KafkaProducer
-from pal_element import Pal_Element
+from pal_element import PalElement
 
-class Pal_Element_Producer(Pal_Element):
+class PalElementProducer(PalElement):
 	"""
 		Description: Parent class used by other producer elements.
 	"""
+	def __init__(self, settings_file):
+		super().__init__(settings_file=settings_file)
 
 	def send(self, topic, event_bytes):
 		"""

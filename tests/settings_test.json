@@ -1,0 +1,5 @@
+{
+	"address": "127.0.0.1:9092",
+	"topic": "TestTopic",
+	"data_dir": "tests/data"
+}

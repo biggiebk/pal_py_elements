@@ -5,7 +5,7 @@ Description: Contains the Element parent class
 
 import json
 
-class Pal_Element():
+class PalElement():
 	"""
 		Description: Parent class used by elements.
 		Responsible for:
@@ -23,13 +23,22 @@ class Pal_Element():
 			Requires:
 				settings_file - Path to the elementals setting file
 		"""
+		self.settings_file = settings_file
 		self.settings = {}
-		self.__load_settings(settings_file)
+		self.__load_settings()
+		self.settings['settings_file'] = settings_file
+
+	def reload(self):
+		"""
+			Reloads the element
+				1. Reloads the configuration
+		"""
+		self.__load_settings()
 
 
 	## Private methods, best not to overide anything beyond this point
 
-	def __load_settings(self, settings_file):
+	def __load_settings(self):
 		"""
 			Description: Parent class used by other elements.
 			Responsible for:
@@ -37,7 +46,6 @@ class Pal_Element():
 			Requires:
 				settings_file - Path to the elementals setting file
 		"""
-		with open(settings_file, 'r') as settings:
+		with open(self.settings_file, 'r') as settings:
 			settings_json = settings.read()
-		# parse file
 		self.settings = json.loads(settings_json)

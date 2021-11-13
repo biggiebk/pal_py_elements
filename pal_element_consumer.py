@@ -3,9 +3,9 @@ Description: Contains the Element parent class
 """
 
 from kafka import KafkaConsumer
-from pal_element import Pal_Element
+from pal_element import PalElement
 
-class Pal_Element_Consumer(Pal_Element):
+class PalElementConsumer(PalElement):
 	"""
 		Description: Parent class used by other elements.
 		Responsible for:
@@ -13,13 +13,15 @@ class Pal_Element_Consumer(Pal_Element):
 			2. Initiates Kafka cosumer
 			3. Contains method to push to Kafka as producer
 	"""
+	def __init__(self, settings_file):
+		super().__init__(settings_file=settings_file)
 
 	def listen(self):
 		"""
 			Description: Connects to Kafka and consumes a topic
 			Responsible for:
 				1. Connecting to Kafka and listening for events/messages
-				2. Calls the event method
+				2. Calls the process_event method
 			Requires:
 				Nothing
 		"""
