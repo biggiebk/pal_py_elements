@@ -62,4 +62,4 @@ class LightEvent():
 	def __return_error(self, reason):
 		"""returns error to calling client"""
 		producer = PalElementProducer(self.settings['settings_file'])
-		producer.send_txt(self.event_dict['originator'], reason)
+		producer.send_txt(self.settings['debug_topic'], reason)

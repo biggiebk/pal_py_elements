@@ -22,7 +22,7 @@ class PalElementProducer(PalElement):
 				1. topic - Name of the topic to send message/event to (string)
 				2. event_bytes - array of bytes
 		"""
-		producer = KafkaProducer(bootstrap_servers=self.settings['address'])
+		producer = KafkaProducer(bootstrap_servers=self.settings['kafka_address'])
 		producer.send(topic, event_bytes)
 		producer.flush()
 

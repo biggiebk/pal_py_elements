@@ -3,7 +3,7 @@ Description: Contains the LightProvider parent class
 
 """
 
-class LightProvider():
+class LightType():
 	"""
 		Description: Parent class used by light providers.
 		Responsible for:

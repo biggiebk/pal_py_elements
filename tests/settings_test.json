@@ -1,5 +1,6 @@
 {
-	"address": "127.0.0.1:9092",
-	"topic": "TestTopic",
+	"kafka_address": "127.0.0.1:9092",
+	"listen_topic": "TestTopic",
+	"debug_topic": "DebugTopic",
 	"data_dir": "tests/data"
 }

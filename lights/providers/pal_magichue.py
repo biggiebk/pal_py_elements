@@ -4,9 +4,9 @@ Description: Dynamicly calls the required light class to handle the requested ev
 
 import magichue
 
-from light_provider import LightProvider
+from light_type import LightType
 
-class PalMagicHue(LightProvider):
+class PalMagicHue(LightType):
 	def __init__(self):
 		pass
 

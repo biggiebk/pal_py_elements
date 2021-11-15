@@ -25,7 +25,8 @@ class PalElementConsumer(PalElement):
 			Requires:
 				Nothing
 		"""
-		consumer = KafkaConsumer(self.settings['topic'], bootstrap_servers=self.settings['address'])
+		consumer = KafkaConsumer(self.settings['listen_topic'],
+			bootstrap_servers=self.settings['kafka_address'])
 		for msg in consumer:
 			self.process_event(msg)
 
@@ -40,4 +41,4 @@ class PalElementConsumer(PalElement):
 			Requires:
 				consuer_message
 		"""
-		print("%s - %s" %(self.settings['topic'], consumer_message.value.decode("utf-8")))
+		print("%s - %s" %(self.settings['listen_topic'], consumer_message.value.decode("utf-8")))
