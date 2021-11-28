@@ -1,14 +1,13 @@
 """
-Description: Module that supports Philips lights
+Description: Module that supports Magic Hue lights
 """
 
-from hue_api import HueApi
+import magichue
 from lights.providers.light_type import LightType
 
-class PalPhilips(LightType):
+class PalMagicHue(LightType):
 	def __init__(self, settings):
 		super().__init__(settings)
-		self.HUEAPI = HueApi()
 
 	def discover(self, light_properties):
 		"""
@@ -17,16 +16,15 @@ class PalPhilips(LightType):
 				light_properties = A list of dictionaries containing light properties
 			Returns a list of device dictionaries
 		"""
-		# Retrieve list of philip lights
-		self.HUEAPI.load_existing()
-		# initiate iterator
-		philips = iter(enumerate(self.HUEAPI.fetch_lights()))
-		for index, philip in philips:
-			# Attempt to match each light
+		# Search for bulbs on the network
+		for bulb in magichue.discover_bulbs():
+			# Attempt to match each bulb to a light
 			for light in light_properties:
-				# If type matches PalPhilips and the identifier matches then set the address to the index/instance number
-				if 'PalPhilips' == light_properties[light]['type'] and philip.name == light_properties[light]['identifier']:
-					light_properties[light]['address'] = index
+				fields = bulb.split(",")
+				# If type matches PalMagic and the identifier matches then set the address to the IP filied
+				if 'PalMagicHue' == light_properties[light]['type'] and fields[1] == light_properties[light]['identifier']:
+					light_properties[light]['address'] = fields[0]
+
 
 	def brightness(self):
 		"""Set brightness level."""

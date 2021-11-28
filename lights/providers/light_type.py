@@ -11,43 +11,32 @@ class LightType():
 			2. Establishes basic
 			3. Contains method to push to Kafka as producer
 	"""
-	def __init__(self, settings, light_properties, event_dict):
+	def __init__(self, settings):
 		self.settings = settings
-		self.light_properties = light_properties
-		self.event_dict = event_dict
+		self.light_properties = {}
+		self.event_dict = {}
+
+	def discover(self):
+		"""
+			Responsible for discovering lights of this type.
+			Returns a list of device dictionaries
+		"""
 
 	def brightness(self):
-		"""
-		Set brightness level. Requries:
-			brightness_level = number indicating brightness level
-		"""
+		"""Set brightness level."""
 
 	def color_rgb(self):
-		"""
-		Set color using RGB
-			red = number value for level of red
-			green = number value for level of green
-			blue = number value for level of blue
-		"""
-
-	def flip(self):
-		"""Quickly flip a light on and off"""
+		"""Set color using RGB"""
 
 	def on_off(self):
-		"""
-		Power on or off a light. Requires:
-			power = boolean value for on (True) or off (False)
-		"""
+		"""Power on or off a light."""
 
-	def set_status(self):
+	def set_status(self, light_properties, event_dict):
 		"""
-		Set the status of a light. Requires:
-			power = boolean value for on (True) or off (False)
-			brightness_level = number indicating brightness level
-			red = number value for level of red
-			green = number value for level of green
-			blue = number value for level of blue
+		Set the status of a light.
 		"""
+		self.light_properties = light_properties
+		self.event_dict = event_dict
 		if self.event_dict['power']:
 			self.color_rgb()
 			self.brightness()

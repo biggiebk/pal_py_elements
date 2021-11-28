@@ -1,4 +1,4 @@
-# Welcome to the pal_py_elements wiki!
+# Welcome to the Pal Py Elements project
 
 These are the standard python Pal services used to initiate actions and/or report status. Elements essentially listen as a consumer to a topic on Kafka and then initiate the requested action.  If required it will then submit a request to other topics as a producer to initiate other activity or report status/errors.
 

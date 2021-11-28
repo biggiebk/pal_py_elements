@@ -20,7 +20,7 @@ class LightEvent():
 		"""Contruct for the light event"""
 		self.settings = settings
 		self.event_dict = event_dict
-		self.light_properties = self.__get_light_properties()
+		self.light_properties = self.get_light_properties()
 
 	def trigger(self):
 		'''
@@ -28,7 +28,7 @@ class LightEvent():
 			Responsible for:
 				1. Locating the provider modules
 				2. Initiating the requested light class
-				3. If error send update back to originator
+				3. If error send update back to return topic
 		'''
 		#Converter the provider name to a module
 		module = __import__(self.light_properties['provider'])
@@ -36,17 +36,15 @@ class LightEvent():
 		# Load the class
 		try:
 			light = getattr(module, self.light_properties['type'])
-			light.new(self.settings, self.light_properties, self.event_dict)
-			light.set_status()
+			light.new(self.settings)
+			light.set_status(self.event_dict)
 		except ModuleNotFoundError:
 			self.__return_error("Unable to locate provider: %s" %(self.light_properties['provider']))
 		except AttributeError:
 			self.__return_error("Did not find provider %s type %s" %(self.light_properties['provider'],
 			self.light_properties['type']))
 
-
-	## Private methods
-	def __get_light_properties(self):
+	def get_light_properties(self):
 		"""
 			Retrieves the properties for identfied light
 			Responsible for:
@@ -59,7 +57,10 @@ class LightEvent():
 		return json.loads(properties_json)
 
 
+	## Private methods
+
 	def __return_error(self, reason):
-		"""returns error to calling client"""
+		"""returns error to main debug channel"""
 		producer = PalElementProducer(self.settings['settings_file'])
 		producer.send_txt(self.settings['debug_topic'], reason)
+		producer.send_txt(self.event_dict['return_topic'], reason)
