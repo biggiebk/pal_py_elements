@@ -12,14 +12,15 @@ class LightType():
 			3. Contains method to push to Kafka as producer
 	"""
 	def __init__(self, settings):
-		self.settings = settings
-		self.light_properties = {}
 		self.event_dict = {}
+		self.light_properties = {}
+		self.settings = settings
 
-	def discover(self):
+	def discover(self, light_properties):
 		"""
 			Responsible for discovering lights of this type.
-			Returns a list of device dictionaries
+			Requires:
+				light_properties = A list of dictionaries containing light properties
 		"""
 
 	def brightness(self):
@@ -31,13 +32,15 @@ class LightType():
 	def on_off(self):
 		"""Power on or off a light."""
 
-	def set_status(self, light_properties, event_dict):
+	def set_properties(self, light_properties):
+		"""
+		Set the light properties. Requries:
+			light_properties = Dictionary of the light properties
+		"""
+		self.light_properties = light_properties
+
+	def set_status(self, event_dict):
 		"""
 		Set the status of a light.
 		"""
-		self.light_properties = light_properties
 		self.event_dict = event_dict
-		if self.event_dict['power']:
-			self.color_rgb()
-			self.brightness()
-		self.on_off()

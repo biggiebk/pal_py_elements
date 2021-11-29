@@ -2,19 +2,21 @@
 Description: Module that supports Magic Hue lights
 """
 
+import time
 import magichue
 from lights.providers.light_type import LightType
 
 class PalMagicHue(LightType):
+	"""Used to communicate with Magic Hue/Home devices"""
 	def __init__(self, settings):
 		super().__init__(settings)
+		self.magic_hue = None
 
 	def discover(self, light_properties):
 		"""
 			Responsible for discovering lights of this type.
 			Requires:
 				light_properties = A list of dictionaries containing light properties
-			Returns a list of device dictionaries
 		"""
 		# Search for bulbs on the network
 		for bulb in magichue.discover_bulbs():
@@ -22,24 +24,43 @@ class PalMagicHue(LightType):
 			for light in light_properties:
 				fields = bulb.split(",")
 				# If type matches PalMagic and the identifier matches then set the address to the IP filied
-				if 'PalMagicHue' == light_properties[light]['type'] and fields[1] == light_properties[light]['identifier']:
+				if (light_properties[light]['type'] == 'PalMagicHue'
+				and fields[1] == light_properties[light]['identifier']):
 					light_properties[light]['address'] = fields[0]
 
 
 	def brightness(self):
 		"""Set brightness level."""
+		self.event_dict['red'] = 255
+		self.event_dict['green'] = 255
+		self.event_dict['blue'] = 255
+		self.color_rgb()
+		time.sleep(1.0)
+		self.magic_hue.brightness = self.event_dict['brightness']
 
 	def color_rgb(self):
 		"""Set color using RGB"""
+		self.magic_hue.rgb = (self.event_dict['red'],
+		self.event_dict['green'], self.event_dict['blue'])
+		print(self.magic_hue.update_status)
+
 
 	def on_off(self):
 		"""Power on or off a light."""
+		self.magic_hue.on = self.event_dict['power']
 
-	def set_status(self, light_properties, event_dict):
+	def set_status(self, event_dict):
 		"""
 		Set the status of a light.
 		"""
+		super().set_status(event_dict)
+		self.magic_hue = magichue.Light(self.light_properties['address'])
+		# If power is set to True
 		if self.event_dict['power']:
-			self.color_rgb()
-			self.brightness()
+			# if mode is white (R, G, and B all equal -1)
+			if (self.event_dict['red'] == -1 and self.event_dict['green'] == -1
+			and self.event_dict['blue'] == -1 ):
+				self.brightness()
+			else:
+				self.color_rgb()
 		self.on_off()
