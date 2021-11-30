@@ -1,7 +1,8 @@
 """
 Description: Module that supports Magic Hue lights
 """
-import time
+from typing import Dict, Any
+from beartype import beartype
 import tinytuya
 from lights.providers.light_type import LightType
 
@@ -11,12 +12,14 @@ class PalTinyTuya(LightType):
 		super().__init__(settings)
 		self.tiny_tuya = None
 
-	def discover(self, light_properties):
+	@beartype
+	def discover(self, light_properties: Dict[str, Dict[str, Any]]) -> None:
 		"""
 			Responsible for discovering lights of this type.
 			Requires:
 				light_properties = A list of dictionaries containing light properties
 		"""
+		super().discover(light_properties)
 		# Search for devices on the network
 		tuyas = tinytuya.deviceScan(False, 50)
 		for tuya in tuyas:
@@ -28,6 +31,7 @@ class PalTinyTuya(LightType):
 					light_properties[light]['address'] = tuya
 
 
+	@beartype
 	def brightness(self):
 		"""Set brightness level."""
 		self.tiny_tuya.set_white(255,self.event_dict['brightness'])
@@ -35,12 +39,14 @@ class PalTinyTuya(LightType):
 		#self.tiny_tuya.set_brightness(self.event_dict['brightness'])
 
 
-	def color_rgb(self):
+	@beartype
+	def color_rgb(self) -> None:
 		"""Set color using RGB"""
 		self.tiny_tuya.set_colour(self.event_dict['red'], self.event_dict['green'],
 		self.event_dict['blue'])
 
-	def on_off(self):
+	@beartype
+	def on_off(self) -> None:
 		"""Power on or off a light."""
 		if self.event_dict['power']:
 			self.tiny_tuya.turn_on()
@@ -48,7 +54,8 @@ class PalTinyTuya(LightType):
 			self.tiny_tuya.turn_off()
 
 
-	def set_status(self, event_dict):
+	@beartype
+	def set_status(self, event_dict: Dict[str, Any]) -> None:
 		"""
 		Set the status of a light.
 		"""

@@ -3,8 +3,9 @@ Description: Contains consumer class for light elements
 """
 import threading
 import json
-
-from pal_element_consumer import PalElementConsumer
+from typing import Tuple
+from beartype import beartype
+from pal_element import PalElementConsumer
 from lights.light_event import LightEvent
 
 
@@ -16,11 +17,12 @@ class LightConsumer(PalElementConsumer):
 			2. Initiates Kafka cosumer
 			3. Contains method to push to Kafka as producer
 	"""
-
-	def __init__(self, settings_file):
+	@beartype
+	def __init__(self, settings_file: str) -> None:
 		super().__init__(settings_file=settings_file)
 
-	def process_event(self, consumer_message):
+	@beartype
+	def process_event(self, consumer_message: Tuple) -> None:
 		"""
 			Description: Initiats events for the requested light
 			Responsible for:

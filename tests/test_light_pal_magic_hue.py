@@ -12,7 +12,7 @@ with open('tests/cfg/settings_test.json', 'r') as settings_file:
 	settings_json = settings_file.read()
 settings = json.loads(settings_json)
 
-with open('tests/cfg/lights.json', 'r') as lights_file:
+with open('tests/cfg/base_lights.json', 'r') as lights_file:
 	lights_json = lights_file.read()
 lights = json.loads(lights_json)
 

@@ -4,10 +4,8 @@ Description: Confirm the ability to communicate with Kafka as a consumer and pro
 """
 import time
 import threading
-from pal_element_consumer import PalElementConsumer
-from pal_element_producer import PalElementProducer
+from pal_element import PalElementConsumer, PalElementProducer
 
-# content of test_sample.py
 def kafka_event():
 	"""
 		function to enable testing of both the producer and consumer in elements

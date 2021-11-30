@@ -4,6 +4,9 @@ Description: Contains the Element parent class
 """
 
 import json
+from typing import Tuple
+from beartype import beartype
+from kafka import KafkaConsumer, KafkaProducer
 
 class PalElement():
 	"""
@@ -13,8 +16,8 @@ class PalElement():
 			2. Initiates Kafka cosumer
 			3. Contains method to push to Kafka as producer
 	"""
-
-	def __init__(self, settings_file):
+	@beartype
+	def __init__(self, settings_file: str) -> None:
 		"""
 			Construct for elemental classes.
 			Responsible for:
@@ -28,6 +31,7 @@ class PalElement():
 		self.__load_settings()
 		self.settings['settings_file'] = settings_file
 
+	@beartype
 	def reload(self):
 		"""
 			Reloads the element
@@ -38,7 +42,8 @@ class PalElement():
 
 	## Private methods, best not to overide anything beyond this point
 
-	def __load_settings(self):
+	@beartype
+	def __load_settings(self) -> None:
 		"""
 			Description: Parent class used by other elements.
 			Responsible for:
@@ -49,3 +54,79 @@ class PalElement():
 		with open(self.settings_file, 'r') as settings:
 			settings_json = settings.read()
 		self.settings = json.loads(settings_json)
+
+class PalElementConsumer(PalElement):
+	"""
+		Description: Parent class used by other elements.
+		Responsible for:
+			1. Basic constructor for starting elements.
+			2. Initiates Kafka cosumer
+			3. Contains method to push to Kafka as producer
+	"""
+	@beartype
+	def __init__(self, settings_file: str) -> None:
+		super().__init__(settings_file=settings_file)
+
+	@beartype
+	def listen(self) -> None:
+		"""
+			Description: Connects to Kafka and consumes a topic
+			Responsible for:
+				1. Connecting to Kafka and listening for events/messages
+				2. Calls the process_event method
+			Requires:
+				Nothing
+		"""
+		consumer = KafkaConsumer(self.settings['listen_topic'],
+			bootstrap_servers=self.settings['kafka_address'])
+		for msg in consumer:
+			self.process_event(msg)
+
+	@beartype
+	def process_event(self, consumer_message: Tuple) -> None:
+		"""
+			Description: Each element should overide this method. The code here mostly
+				is to support testing connectivity with Kafka
+			Responsible for:
+				1. Converts the messages value to string
+				2. Returns the string
+				3. Quits the class
+			Requires:
+				consuer_message
+		"""
+		print("%s - %s" %(self.settings['listen_topic'], consumer_message.value.decode("utf-8")))
+
+class PalElementProducer(PalElement):
+	"""
+		Description: Parent class used by other producer elements.
+	"""
+	@beartype
+	def __init__(self, settings_file: str) -> None:
+		super().__init__(settings_file=settings_file)
+
+	@beartype
+	def send(self, topic, event_bytes: bytes) -> None:
+		"""
+			Description: Sends a byte array to Kafka as a producer
+			Responsible for:
+				1. Send event bytes to topic
+			Requires:
+				1. topic - Name of the topic to send message/event to (string)
+				2. event_bytes - array of bytes
+		"""
+		producer = KafkaProducer(bootstrap_servers=self.settings['kafka_address'])
+		producer.send(topic, event_bytes)
+		producer.flush()
+
+	@beartype
+	def send_txt(self, topic, text_message: str) -> None:
+		"""
+			Description: Sends a text (string) to Kafka as a producer
+			Responsible for:
+				1. Convert the message to bytes from string
+				2. Calls send
+			Requires:
+				1. topic - Name of the topic to send message/event to (string)
+				2. text_message - Text message to send (string)
+		"""
+		self.send(topic, bytes(text_message, 'utf-8'))

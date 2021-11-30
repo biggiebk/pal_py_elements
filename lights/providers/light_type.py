@@ -2,6 +2,8 @@
 Description: Contains the LightProvider parent class
 
 """
+from typing import Dict, Any
+from beartype import beartype
 
 class LightType():
 	"""
@@ -16,30 +18,31 @@ class LightType():
 		self.light_properties = {}
 		self.settings = settings
 
-	def discover(self, light_properties):
+	@beartype
+	def discover(self, light_properties: Dict[str, Dict[str, Any]]) -> None:
 		"""
 			Responsible for discovering lights of this type.
 			Requires:
 				light_properties = A list of dictionaries containing light properties
 		"""
 
-	def brightness(self):
+	def brightness(self) -> None:
 		"""Set brightness level."""
 
-	def color_rgb(self):
+	def color_rgb(self) -> None:
 		"""Set color using RGB"""
 
-	def on_off(self):
+	def on_off(self) -> None:
 		"""Power on or off a light."""
 
-	def set_properties(self, light_properties):
+	def set_properties(self, light_properties: Dict[str, Any]) -> None:
 		"""
 		Set the light properties. Requries:
 			light_properties = Dictionary of the light properties
 		"""
 		self.light_properties = light_properties
 
-	def set_status(self, event_dict):
+	def set_status(self, event_dict: Dict[str, Any]) -> None:
 		"""
 		Set the status of a light.
 		"""

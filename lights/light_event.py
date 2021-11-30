@@ -2,8 +2,11 @@
 Description: Dynamicly calls the required light class to handle the requested event
 """
 
+import importlib
 import json
-from pal_element_producer import PalElementProducer
+from typing import Dict, Any
+from beartype import beartype
+from pal_element import PalElementProducer
 
 class LightEvent():
 
@@ -15,14 +18,15 @@ class LightEvent():
 			2. iniates the light
 			3. Contains method to push to Kafka as producer
 	"""
-
-	def __init__(self, settings, event_dict):
+	@beartype
+	def __init__(self, settings, event_dict: Dict[str, Any]) -> None:
 		"""Contruct for the light event"""
 		self.settings = settings
 		self.event_dict = event_dict
 		self.light_properties = self.get_light_properties()
 
-	def trigger(self):
+	@beartype
+	def trigger(self) -> None:
 		'''
 			Trigger method
 			Responsible for:
@@ -31,12 +35,12 @@ class LightEvent():
 				3. If error send update back to return topic
 		'''
 		#Converter the provider name to a module
-		module = __import__(self.light_properties['provider'])
+		module = importlib.import_module(self.light_properties['provider'])
 
 		# Load the class
 		try:
-			light = getattr(module, self.light_properties['type'])
-			light.new(self.settings)
+			light = getattr(module, self.light_properties['type'])(self.settings)
+			light.set_properties(self.light_properties)
 			light.set_status(self.event_dict)
 		except ModuleNotFoundError:
 			self.__return_error("Unable to locate provider: %s" %(self.light_properties['provider']))
@@ -44,22 +48,26 @@ class LightEvent():
 			self.__return_error("Did not find provider %s type %s" %(self.light_properties['provider'],
 			self.light_properties['type']))
 
-	def get_light_properties(self):
+
+	@beartype
+	def get_light_properties(self) -> Dict[str, Any]:
 		"""
 			Retrieves the properties for identfied light
 			Responsible for:
 				1. Opening the properties.json file for requested light
 				2. Returns properties as a dictionary
 		"""
-		with open("%s/devices/lights/%s" %(self.settings['data_dir'], self.event_dict['name']),
+		with open("%s/lights.json" %(self.settings['data_dir']),
 		'r') as properties:
 			properties_json = properties.read()
-		return json.loads(properties_json)
+		properties = json.loads(properties_json)
+		return properties[self.event_dict['name']]
 
 
 	## Private methods
 
-	def __return_error(self, reason):
+	@beartype
+	def __return_error(self, reason: str) -> None:
 		"""returns error to main debug channel"""
 		producer = PalElementProducer(self.settings['settings_file'])
 		producer.send_txt(self.settings['debug_topic'], reason)

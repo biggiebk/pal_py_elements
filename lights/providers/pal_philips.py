@@ -2,6 +2,8 @@
 Description: Module that supports Philips lights
 """
 
+from typing import Dict, Any
+from beartype import beartype
 from hue_api import HueApi
 from lights.providers.light_type import LightType
 
@@ -12,12 +14,14 @@ class PalPhilips(LightType):
 		self.instance = None
 		self.hue = HueApi()
 
-	def discover(self, light_properties):
+	@beartype
+	def discover(self, light_properties: Dict[str, Dict[str, Any]]) -> None:
 		"""
 			Responsible for discovering lights of this type.
 			Requires:
 				light_properties = A list of dictionaries containing light properties
 		"""
+		super().discover(light_properties)
 		# Retrieve list of philip lights
 		self.hue.load_existing()
 		# initiate iterator
@@ -31,11 +35,13 @@ class PalPhilips(LightType):
 				and philip.name == light_properties[light]['identifier']):
 					light_properties[light]['address'] = index
 
-	def brightness(self):
+	@beartype
+	def brightness(self) -> None:
 		"""Set brightness level."""
 		self.hue.set_brightness(self.event_dict['brightness'])
 
-	def on_off(self):
+	@beartype
+	def on_off(self) -> None:
 		"""Power on or off a light."""
 		if self.event_dict['power']:
 			self.hue.turn_on(self.instance)
@@ -43,14 +49,15 @@ class PalPhilips(LightType):
 			self.hue.turn_off(self.instance)
 
 
-	def set_status(self, event_dict):
+	@beartype
+	def set_status(self, event_dict: Dict[str, Any]) -> None:
 		"""
 		Set the status of a light.
 		"""
+		super().set_status(event_dict)
 		self.instance = self.light_properties['address']
 		self.hue.load_existing()
 		self.hue.fetch_lights()
-		super().set_status(event_dict)
 		# Light must be turned on before manipulation
 		self.on_off()
 		if self.event_dict['power']:
