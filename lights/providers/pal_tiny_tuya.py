@@ -43,7 +43,7 @@ class PalTinyTuya(LightType):
 		if self.event_dict['power']:
 			if (self.event_dict['red'] == -1 and self.event_dict['green'] == -1
 			and self.event_dict['blue'] == -1):
-				self.tiny_tuya.set_white(self.event_dict['brightness'],1000)
+				self.__brightness()
 			else:
 				self.__color_rgb()
 		self.__on_off()
@@ -52,7 +52,8 @@ class PalTinyTuya(LightType):
 	@beartype
 	def __brightness(self):
 		"""Set brightness level."""
-		self.tiny_tuya.set_white(255,self.event_dict['brightness'])
+		self.tiny_tuya.set_white(self.event_dict['brightness'],1000)
+		
 
 	@beartype
 	def __color_rgb(self) -> None:
