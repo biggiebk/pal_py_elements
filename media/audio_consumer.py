@@ -1,15 +1,14 @@
 """
-Description: Contains consumer class for light elements
+Description: Contains consumer class for media elements
 """
-import threading
 import json
 from typing import Tuple
 from beartype import beartype
 from pal_element import PalElement
-from lights.light_event import LightEvent
+from media.players.pal_audio_player import PalAudioPlayer
 
 
-class LightConsumer(PalElement):
+class AudioConsumer(PalElement):
 	"""
 		Description: Parent class used by other elements.
 		Responsible for:
@@ -20,6 +19,7 @@ class LightConsumer(PalElement):
 	@beartype
 	def __init__(self, settings_file: str) -> None:
 		super().__init__(settings_file=settings_file)
+		self.pal_player = PalAudioPlayer("")
 
 	@beartype
 	def process_event(self, consumer_message: Tuple) -> None:
@@ -31,7 +31,8 @@ class LightConsumer(PalElement):
 			Requires:
 				consumer_message
 		"""
-		light_event = LightEvent(self.settings,json.loads(consumer_message.value.decode("utf-8")))
-		thread = threading.Thread(target=light_event.trigger(), args=())
-		thread.setDaemon(True)
-		thread.start()
+		control_dict = json.loads(consumer_message.value.decode("utf-8"))
+		if control_dict['event_type'] == 'control':
+			self.pal_player.submit_controls(control_dict)
+		elif control_dict['event_type'] == 'status':
+			pass

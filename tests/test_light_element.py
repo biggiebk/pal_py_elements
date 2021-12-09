@@ -6,7 +6,7 @@ import pytest
 import threading
 import json
 import time
-from pal_element import PalElementProducer
+from pal_element import PalElement
 from lights.light_consumer import LightConsumer
 from lights.providers.pal_philips import PalPhilips
 
@@ -55,6 +55,6 @@ philips_args = [
 	(settings, lights, philips_off, 30)]
 @pytest.mark.parametrize("settings,lights,event,sleep_time", philips_args)
 def test_light_element(settings, lights, event, sleep_time):
-	element_producer = PalElementProducer('tests/cfg/settings_test.json')
+	element_producer = PalElement('tests/cfg/settings_test.json')
 	element_producer.send_txt(settings['listen_topic'], json.dumps(event))
 	time.sleep(sleep_time)

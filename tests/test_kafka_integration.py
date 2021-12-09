@@ -4,22 +4,21 @@ Description: Confirm the ability to communicate with Kafka as a consumer and pro
 """
 import time
 import threading
-from pal_element import PalElementConsumer, PalElementProducer
+from pal_element import PalElement
 
 def kafka_event():
 	"""
 		function to enable testing of both the producer and consumer in elements
 	"""
-	element_consumer = PalElementConsumer('tests/cfg/settings_test.json')
+	element_consumer = PalElement('tests/cfg/settings_test.json')
 	# Start the consumer
 	thread = threading.Thread(target=element_consumer.listen, args=())
 	thread.setDaemon(True)
 	thread.start()
 	time.sleep(1)
-	element_producer = PalElementProducer('tests/cfg/settings_test.json')
+	element_producer = PalElement('tests/cfg/settings_test.json')
 	element_producer.send_txt("TestTopic","I see you")
 	time.sleep(1)
-
 
 def test_kafka(capsys):
 	"""Calls the Kafaka event"""

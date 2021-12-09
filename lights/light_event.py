@@ -6,7 +6,7 @@ import importlib
 import json
 from typing import Dict, Any
 from beartype import beartype
-from pal_element import PalElementProducer
+from pal_element import PalElement
 
 class LightEvent():
 
@@ -69,6 +69,6 @@ class LightEvent():
 	@beartype
 	def __return_error(self, reason: str) -> None:
 		"""returns error to main debug channel"""
-		producer = PalElementProducer(self.settings['settings_file'])
+		producer = PalElement(self.settings['settings_file'])
 		producer.send_txt(self.settings['debug_topic'], reason)
 		producer.send_txt(self.event_dict['return_topic'], reason)

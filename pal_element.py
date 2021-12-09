@@ -32,42 +32,6 @@ class PalElement():
 		self.settings['settings_file'] = settings_file
 
 	@beartype
-	def reload(self):
-		"""
-			Reloads the element
-				1. Reloads the configuration
-		"""
-		self.__load_settings()
-
-
-	## Private methods, best not to overide anything beyond this point
-
-	@beartype
-	def __load_settings(self) -> None:
-		"""
-			Description: Parent class used by other elements.
-			Responsible for:
-				1. Loading settings
-			Requires:
-				settings_file - Path to the elementals setting file
-		"""
-		with open(self.settings_file, 'r') as settings:
-			settings_json = settings.read()
-		self.settings = json.loads(settings_json)
-
-class PalElementConsumer(PalElement):
-	"""
-		Description: Parent class used by other elements.
-		Responsible for:
-			1. Basic constructor for starting elements.
-			2. Initiates Kafka cosumer
-			3. Contains method to push to Kafka as producer
-	"""
-	@beartype
-	def __init__(self, settings_file: str) -> None:
-		super().__init__(settings_file=settings_file)
-
-	@beartype
 	def listen(self) -> None:
 		"""
 			Description: Connects to Kafka and consumes a topic
@@ -96,13 +60,14 @@ class PalElementConsumer(PalElement):
 		"""
 		print("%s - %s" %(self.settings['listen_topic'], consumer_message.value.decode("utf-8")))
 
-class PalElementProducer(PalElement):
-	"""
-		Description: Parent class used by other producer elements.
-	"""
+
 	@beartype
-	def __init__(self, settings_file: str) -> None:
-		super().__init__(settings_file=settings_file)
+	def reload(self):
+		"""
+			Reloads the element
+				1. Reloads the configuration
+		"""
+		self.__load_settings()
 
 	@beartype
 	def send(self, topic, event_bytes: bytes) -> None:
@@ -130,3 +95,18 @@ class PalElementProducer(PalElement):
 				2. text_message - Text message to send (string)
 		"""
 		self.send(topic, bytes(text_message, 'utf-8'))
+
+	## Private methods, best not to overide anything beyond this point
+
+	@beartype
+	def __load_settings(self) -> None:
+		"""
+			Description: Parent class used by other elements.
+			Responsible for:
+				1. Loading settings
+			Requires:
+				settings_file - Path to the elementals setting file
+		"""
+		with open(self.settings_file, 'r') as settings:
+			settings_json = settings.read()
+		self.settings = json.loads(settings_json)

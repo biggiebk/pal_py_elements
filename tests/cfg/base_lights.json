@@ -4,7 +4,7 @@
 		"type": "PalPhilips",
 		"room": "office",
 		"identifier": "Office 1",
-		"address": 0
+		"address": null
 		},
 	"office2": {
 		"provider": "pal_tiny_tuya",
