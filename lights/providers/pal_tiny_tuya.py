@@ -32,34 +32,11 @@ class PalTinyTuya(LightType):
 
 
 	@beartype
-	def brightness(self):
-		"""Set brightness level."""
-		self.tiny_tuya.set_white(255,self.event_dict['brightness'])
-		#time.sleep(1.0)
-		#self.tiny_tuya.set_brightness(self.event_dict['brightness'])
-
-
-	@beartype
-	def color_rgb(self) -> None:
-		"""Set color using RGB"""
-		self.tiny_tuya.set_colour(self.event_dict['red'], self.event_dict['green'],
-		self.event_dict['blue'])
-
-	@beartype
-	def on_off(self) -> None:
-		"""Power on or off a light."""
-		if self.event_dict['power']:
-			self.tiny_tuya.turn_on()
-		else:
-			self.tiny_tuya.turn_off()
-
-
-	@beartype
-	def set_status(self, event_dict: Dict[str, Any]) -> None:
+	def set(self, event_dict: Dict[str, Any], light_properties: Dict[str, Any]) -> None:
 		"""
 		Set the status of a light.
 		"""
-		super().set_status(event_dict)
+		super().set(event_dict,light_properties)
 		self.tiny_tuya = tinytuya.BulbDevice(self.light_properties['identifier'],
 		self.light_properties['address'], self.light_properties['key'])
 		self.tiny_tuya.set_version(3.3)
@@ -68,5 +45,25 @@ class PalTinyTuya(LightType):
 			and self.event_dict['blue'] == -1):
 				self.tiny_tuya.set_white(self.event_dict['brightness'],1000)
 			else:
-				self.color_rgb()
-		self.on_off()
+				self.__color_rgb()
+		self.__on_off()
+
+	# Private functions
+	@beartype
+	def __brightness(self):
+		"""Set brightness level."""
+		self.tiny_tuya.set_white(255,self.event_dict['brightness'])
+
+	@beartype
+	def __color_rgb(self) -> None:
+		"""Set color using RGB"""
+		self.tiny_tuya.set_colour(self.event_dict['red'], self.event_dict['green'],
+		self.event_dict['blue'])
+
+	@beartype
+	def __on_off(self) -> None:
+		"""Power on or off a light."""
+		if self.event_dict['power']:
+			self.tiny_tuya.turn_on()
+		else:
+			self.tiny_tuya.turn_off()

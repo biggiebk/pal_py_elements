@@ -31,7 +31,11 @@ class LightConsumer(PalElement):
 			Requires:
 				consumer_message
 		"""
-		light_event = LightEvent(self.settings,json.loads(consumer_message.value.decode("utf-8")))
-		thread = threading.Thread(target=light_event.trigger(), args=())
-		thread.setDaemon(True)
-		thread.start()
+		control_dict = json.loads(consumer_message.value.decode("utf-8"))
+		if control_dict['event_type'] == 'control':
+			light_event = LightEvent(self.settings,json.loads(control_dict))
+			thread = threading.Thread(target=light_event.trigger(), args=())
+			thread.setDaemon(True)
+			thread.start()
+		elif control_dict['event_type'] == 'status':
+			pass

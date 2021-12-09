@@ -33,6 +33,6 @@ class AudioConsumer(PalElement):
 		"""
 		control_dict = json.loads(consumer_message.value.decode("utf-8"))
 		if control_dict['event_type'] == 'control':
-			self.pal_player.submit_controls(control_dict)
+			self.pal_player.set(control_dict)
 		elif control_dict['event_type'] == 'status':
 			pass

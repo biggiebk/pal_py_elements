@@ -30,13 +30,13 @@ def test_philips_discover(settings, lights):
 
 # Run light manipulation tests
 ## Turn on with full birghtness
-philips_on = {	"provider": "lights.providers.pal_philips", "type":"PalPhilips",	"name": "office1",
+philips_on = { "event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips",	"name": "office1",
 	"power": True,	"red": 0,	"green": 0,	"blue": 0,	"brightness": 254 }
 ## Adjust brightness to half
-philips_low = {	"provider": "lights.providers.pal_philips", "type":"PalPhilips", "name": "office1",
-	"power": True,	"red": 0,	"green": 0,	"blue": 0,	"brightness": 75 }
+philips_low = { "event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips", "name": "office1",
+	"power": True, "red": 0,	"green": 0,	"blue": 0,	"brightness": 75 }
 ## Turn off
-philips_off = {	"provider": "lights.providers.pal_philips", "type":"PalPhilips", "name": "office1",
+philips_off = {	"event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips", "name": "office1",
 	"power": False,	"red": 0,	"green": 0,	"blue": 0,	"brightness": 254 }
 philips_args = [
 	(settings, lights, philips_on, 5),
@@ -46,8 +46,7 @@ philips_args = [
 def test_philips_manipulation(settings, lights, event, sleep_time):
 	"""Test to manipulate philips lights"""
 	philips = PalPhilips(settings)
-	philips.set_properties(lights['office1'])
 	# Power on
-	assert philips.set_status(event) == None
+	assert philips.set(event, lights['office1']) == None
 	# Allow for some time to see changes
 	time.sleep(sleep_time)

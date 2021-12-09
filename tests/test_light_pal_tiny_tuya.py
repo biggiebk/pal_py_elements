@@ -29,16 +29,16 @@ def test_magic_hue_discover(settings, lights):
 
 # Run light manipulation tests
 ### Turn on with full bright white
-tuya_on = {	"provider": "lights.providers.pal_tiny_tuya", "type":"PalTinyTuya",	"name": "office2",
+tuya_on = {	"event_type": "control", "provider": "lights.providers.pal_tiny_tuya", "type":"PalTinyTuya",	"name": "office2",
 	"power": True,	"red": -1,	"green": -1,	"blue": -1,	"brightness": 1000 }
 ### Adjust brightness to half
-tuya_low = {	"provider": "lights.providers.pal_tiny_tuya", "type":"PalTinyTuya",	"name": "office2",
+tuya_low = { "event_type": "control", "provider": "lights.providers.pal_tiny_tuya", "type":"PalTinyTuya",	"name": "office2",
 	"power": True,	"red": -1,	"green": -1,	"blue": -1,	"brightness": 100 }
 ### Adjust color blue
-tuya_red = {	"provider": "lights.providers.pal_tiny_tuya", "type":"PalTinyTuya",	"name": "office2",
+tuya_red = {"event_type": "control", "provider": "lights.providers.pal_tiny_tuya", "type":"PalTinyTuya",	"name": "office2",
 	"power": True,	"red": 255,	"green": 0,	"blue": 0,	"brightness": 1000 }
 ## Turn off
-tuya_off = {	"provider": "lights.providers.pal_tiny_tuya", "type":"PalTinyTuya",	"name": "office2",
+tuya_off = {"event_type": "control", "provider": "lights.providers.pal_tiny_tuya", "type":"PalTinyTuya",	"name": "office2",
 	"power": False,	"red": 0,	"green": 0,	"blue": 0,	"brightness": 255 }
 tuya_args = [
 	(settings, lights, tuya_on, 5),
@@ -49,8 +49,7 @@ tuya_args = [
 def test_tiny_tuya_manipulation(settings, lights, event, sleep_time):
 	"""Test to manipulate magic hue lights"""
 	tuya = PalTinyTuya(settings)
-	tuya.set_properties(lights['office2'])
 	# Power on
-	assert tuya.set_status(event) == None
+	assert tuya.set(event, lights['office2']) == None
 	# Allow for some time to see changes
 	time.sleep(sleep_time)

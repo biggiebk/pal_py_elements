@@ -35,7 +35,7 @@ class PalAudioPlayer():
 			pass # do nothing we know this may blow up if something has not already started to play
 
 	@beartype
-	def submit_controls(self, control_dict: Dict[str, Union[str, int]]) -> None:
+	def set(self, control_dict: Dict[str, Union[str, int]]) -> None:
 		"""
 		Control the audio player. Requries:
 			control_dict = Dictionary detailing what controls to execute

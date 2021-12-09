@@ -40,8 +40,7 @@ class LightEvent():
 		# Load the class
 		try:
 			light = getattr(module, self.light_properties['type'])(self.settings)
-			light.set_properties(self.light_properties)
-			light.set_status(self.event_dict)
+			light.set(self.event_dict, self.light_properties)
 		except ModuleNotFoundError:
 			self.__return_error("Unable to locate provider: %s" %(self.light_properties['provider']))
 		except AttributeError:

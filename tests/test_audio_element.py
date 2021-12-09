@@ -36,7 +36,7 @@ play_track_vol_75 = { "event_type": "control", "play_track": mp3,	"return_topic"
 	"volume": 75, "play": "play" }
 set_vol_50 = { "event_type": "control",	"volume": 50 }
 pause_play = { "event_type": "control",	"play": "pause" }
-resume =  { "event_type": "control",	"play": "play" }
+resume =  { "event_type": "control",	"play": "play",	"volume": 60 }
 stop =  { "event_type": "control",	"play": "stop" }
 restart =  { "event_type": "control",	"play": "play" }
 audio_tests = [

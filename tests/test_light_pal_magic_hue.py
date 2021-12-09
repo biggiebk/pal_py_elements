@@ -29,16 +29,16 @@ def test_magic_hue_discover(settings, lights):
 
 # Run light manipulation tests
 ### Turn on with full bright white
-magic_hue_on = {	"provider": "lights.providers.pal_magic_hue", "type":"PalMagicHue",	"name": "office3",
+magic_hue_on = { "event_type": "control", "provider": "lights.providers.pal_magic_hue", "type":"PalMagicHue",	"name": "office3",
 	"power": True,	"red": -1,	"green": -1,	"blue": -1,	"brightness": 255 }
 ### Adjust brightness to half
-magic_hue_low = {	"provider": "lights.providers.pal_magic_hue", "type":"PalMagicHue",	"name": "office3",
+magic_hue_low = {	"event_type": "control", "provider": "lights.providers.pal_magic_hue", "type":"PalMagicHue",	"name": "office3",
 	"power": True,	"red": -1,	"green": -1,	"blue": -1,	"brightness": 75 }
 ### Adjust color blue
-magic_hue_blue = {	"provider": "lights.providers.pal_magic_hue", "type":"PalMagicHue",	"name": "office3",
+magic_hue_blue = { "event_type": "control", "provider": "lights.providers.pal_magic_hue", "type":"PalMagicHue",	"name": "office3",
 	"power": True,	"red": 0,	"green": 0,	"blue": 255,	"brightness": 255 }
 ## Turn off
-magic_hue_off = {	"provider": "lights.providers.pal_magic_hue", "type":"PalMagicHue",	"name": "office3",
+magic_hue_off = { "event_type": "control", "provider": "lights.providers.pal_magic_hue", "type":"PalMagicHue",	"name": "office3",
 	"power": False,	"red": 0,	"green": 0,	"blue": 0,	"brightness": 255 }
 magic_hue_args = [
 	(settings, lights, magic_hue_on, 5),
@@ -49,8 +49,7 @@ magic_hue_args = [
 def test_magic_hue_manipulation(settings, lights, event, sleep_time):
 	"""Test to manipulate magic hue lights"""
 	magic_hue = PalMagicHue(settings)
-	magic_hue.set_properties(lights['office3'])
 	# Power on
-	assert magic_hue.set_status(event) == None
+	assert magic_hue.set(event, lights['office3']) == None
 	# Allow for some time to see changes
 	time.sleep(sleep_time)
