@@ -32,13 +32,13 @@ mp3 = random.choice(glob.glob(os.path.expanduser('~') + '/Music/tests/'  + '*.mp
 # Run audio manipulation tests
 ## Turn on with full birghtness
 
-play_track_vol_75 = { "event_type": "control", "play_track": mp3,	"return_topic": "debug_topic",
+play_track_vol_75 = { "event_type": "control", "play_track": mp3, "return_topic": "debug_topic",
 	"volume": 75, "play": "play" }
-set_vol_50 = { "event_type": "control",	"volume": 50 }
-pause_play = { "event_type": "control",	"play": "pause" }
-resume =  { "event_type": "control",	"play": "play",	"volume": 60 }
-stop =  { "event_type": "control",	"play": "stop" }
-restart =  { "event_type": "control",	"play": "play" }
+set_vol_50 = { "event_type": "control", "volume": 50 }
+pause_play = { "event_type": "control", "play": "pause" }
+resume =  { "event_type": "control", "play": "play", "volume": 60 }
+stop =  { "event_type": "control", "play": "stop" }
+restart =  { "event_type": "control", "play": "play" }
 audio_tests = [
 	(settings, play_track_vol_75, 5),
 	(settings, set_vol_50, 5),
