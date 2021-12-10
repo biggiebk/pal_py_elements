@@ -39,8 +39,8 @@ philips_low = { "event_type": "control", "provider": "lights.providers.pal_phili
 philips_off = {	"event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips", "name": "office1",
 	"power": False,	"red": 0,	"green": 0,	"blue": 0,	"brightness": 254 }
 philips_args = [
-	(settings, lights, philips_on, 5),
 	(settings, lights, philips_low, 5),
+	(settings, lights, philips_on, 5),
 	(settings, lights, philips_off, 0)]
 @pytest.mark.parametrize("settings,lights,event,sleep_time", philips_args)
 def test_philips_manipulation(settings, lights, event, sleep_time):

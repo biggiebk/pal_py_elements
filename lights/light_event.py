@@ -47,7 +47,6 @@ class LightEvent():
 			self.__return_error("Did not find provider %s type %s" %(self.light_properties['provider'],
 			self.light_properties['type']))
 
-
 	@beartype
 	def get_light_properties(self) -> Dict[str, Any]:
 		"""

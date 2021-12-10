@@ -42,19 +42,19 @@ def test_philips_discover(settings, lights):
 # Run light manipulation tests
 ## Turn on with full birghtness
 philips_on = { "event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips",	"name": "office1",
-	"power": True,	"red": 0,	"green": 0,	"blue": 0,	"brightness": 255 }
+	"power": True,	"red": 0,	"green": 0,	"blue": 0,	"brightness": 254 }
 ## Adjust brightness to half
 philips_low = { "event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips", "name": "office1",
-	"power": True,	"red": 0,	"green": 0,	"blue": 0,	"brightness": 75 }
+	"power": True, "red": 0,	"green": 0,	"blue": 0,	"brightness": 75 }
 ## Turn off
-philips_off = { "event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips", "name": "office1",
-	"power": False,	"red": 0,	"green": 0,	"blue": 0,	"brightness": 255 }
+philips_off = {	"event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips", "name": "office1",
+	"power": False,	"red": 0,	"green": 0,	"blue": 0,	"brightness": 254 }
 philips_args = [
-	(settings, lights, philips_on, 30),
-	(settings, lights, philips_low, 30),
-	(settings, lights, philips_off, 30)]
-@pytest.mark.parametrize("settings,lights,event,sleep_time", philips_args)
-def test_light_element(settings, lights, event, sleep_time):
+	(settings, philips_low, 30),
+	(settings, philips_on, 30),
+	(settings, philips_off, 5)]
+@pytest.mark.parametrize("settings,event,sleep_time", philips_args)
+def test_light_element(settings, event, sleep_time):
 	element_producer = PalElement('tests/cfg/settings_test.json')
 	element_producer.send_txt(settings['listen_topic'], json.dumps(event))
 	time.sleep(sleep_time)
