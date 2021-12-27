@@ -1,7 +1,6 @@
 """
 Description: Contains consumer class for media elements
 """
-import time
 from typing import Dict, Union
 import vlc
 from beartype import beartype

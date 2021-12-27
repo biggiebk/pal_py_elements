@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Ignore test data and logs
+tests/data/mongodb/*
+tests/logs/mongodb.log

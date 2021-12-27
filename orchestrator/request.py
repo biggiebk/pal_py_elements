@@ -8,15 +8,15 @@ from typing import Dict, Any
 from beartype import beartype
 from pal_element import PalElement
 
-class LightEvent():
+class Request():
 
 	"""
-		Description: Updates the status of lights
+		Description: Checks the request type and sends the request to the correct kafka element
 		Responsible for:
 			1. Parses the JSON
-			2. Locates the provider/module and the type of light
-			3. iniates the light
-			4. Contains method to push to Kafka as producer
+			1. Locates the provider/module and the type of light
+			2. iniates the light
+			3. Contains method to push to Kafka as producer
 	"""
 	@beartype
 	def __init__(self, settings, event_dict: Dict[str, Any]) -> None:

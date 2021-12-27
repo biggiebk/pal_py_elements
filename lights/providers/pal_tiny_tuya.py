@@ -30,7 +30,6 @@ class PalTinyTuya(LightType):
 				and tuyas[tuya]['gwId'] == light_properties[light]['identifier']):
 					light_properties[light]['address'] = tuya
 
-
 	@beartype
 	def set(self, event_dict: Dict[str, Any], light_properties: Dict[str, Any]) -> None:
 		"""
@@ -53,7 +52,6 @@ class PalTinyTuya(LightType):
 	def __brightness(self):
 		"""Set brightness level."""
 		self.tiny_tuya.set_white(self.event_dict['brightness'],1000)
-		
 
 	@beartype
 	def __color_rgb(self) -> None:

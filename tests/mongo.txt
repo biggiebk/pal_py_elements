@@ -1,0 +1,9 @@
+
+# Start
+mongod --config tests/cfg/pal_mongodb.conf
+
+# Stop
+pkill -9 mongod
+
+# reset
+rm -Rf tests/data/mongodb/*
