@@ -2,7 +2,6 @@
 Description: Contains consumer class for media elements
 """
 import json
-from typing import Tuple
 from beartype import beartype
 from pal_element import PalElement
 from media.players.pal_audio_player import PalAudioPlayer
@@ -22,7 +21,7 @@ class AudioConsumer(PalElement):
 		self.pal_player = PalAudioPlayer("")
 
 	@beartype
-	def process_event(self, consumer_message: Tuple) -> None:
+	def process_event(self, consumer_message: tuple) -> None:
 		"""
 			Description: Initiats events for the requested light
 			Responsible for:

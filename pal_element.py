@@ -4,7 +4,6 @@ Description: Contains the Element parent class
 """
 
 import json
-from typing import Tuple
 from beartype import beartype
 from kafka import KafkaConsumer, KafkaProducer
 
@@ -30,6 +29,7 @@ class PalElement():
 		self.settings = {}
 		self.__load_settings()
 		self.settings['settings_file'] = settings_file
+		self.consumer = None
 
 	@beartype
 	def listen(self) -> None:
@@ -41,13 +41,13 @@ class PalElement():
 			Requires:
 				Nothing
 		"""
-		consumer = KafkaConsumer(self.settings['listen_topic'],
+		self.consumer = KafkaConsumer(self.settings['listen_topic'],
 			bootstrap_servers=self.settings['kafka_address'])
-		for msg in consumer:
+		for msg in self.consumer:
 			self.process_event(msg)
 
 	@beartype
-	def process_event(self, consumer_message: Tuple) -> None:
+	def process_event(self, consumer_message: tuple) -> None:
 		"""
 			Description: Each element should overide this method. The code here mostly
 				is to support testing connectivity with Kafka
@@ -59,7 +59,6 @@ class PalElement():
 				consuer_message
 		"""
 		print("%s - %s" %(self.settings['listen_topic'], consumer_message.value.decode("utf-8")))
-
 
 	@beartype
 	def reload(self):
@@ -95,6 +94,10 @@ class PalElement():
 				2. text_message - Text message to send (string)
 		"""
 		self.send(topic, bytes(text_message, 'utf-8'))
+
+	@beartype
+	def stop(self) -> None:
+		self.consumer.close()
 
 	## Private methods, best not to overide anything beyond this point
 

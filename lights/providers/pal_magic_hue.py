@@ -2,8 +2,8 @@
 Description: Module that supports Magic Hue lights
 """
 
+import socket
 import time
-from typing import Dict, Any
 from beartype import beartype
 import magichue
 from lights.providers.light_type import LightType
@@ -15,7 +15,7 @@ class PalMagicHue(LightType):
 		self.magic_hue = None
 
 	@beartype
-	def discover(self, light_properties: Dict[str, Dict[str, Any]]) -> None:
+	def discover(self, light_properties: dict[str, dict[str, any]]) -> None:
 		"""
 			Responsible for discovering lights of this type.
 			Requires:
@@ -23,7 +23,29 @@ class PalMagicHue(LightType):
 		"""
 		super().discover(light_properties)
 		# Search for bulbs on the network
-		for bulb in magichue.discover_bulbs():
+
+		# The magichue library does not support identification of bulbs, so we have to code our own
+		DISCOVERY_PORT = 48899
+		DISCOVERY_MSG = b"HF-A11ASSISTHREAD"
+		bulbs = []
+
+		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+		sock.settimeout(1)
+		sock.sendto(DISCOVERY_MSG, ('255.255.255.255', DISCOVERY_PORT))
+
+		try:
+			while True:
+				response, bulb = sock.recvfrom(64)
+				if response != DISCOVERY_MSG:
+					bulbs.append(response.decode())
+		except socket.timeout:
+			pass
+
+		sock.close()
+
+		for bulb in bulbs:
 			# Attempt to match each bulb to a light
 			for light in light_properties:
 				fields = bulb.split(",")
@@ -33,7 +55,7 @@ class PalMagicHue(LightType):
 					light_properties[light]['address'] = fields[0]
 
 	@beartype
-	def set(self, event_dict: Dict[str, Any], light_properties: Dict[str, Any]) -> None:
+	def set(self, event_dict: dict[str, any], light_properties: dict[str, any]) -> None:
 		"""
 		Set the status of a light.
 		"""

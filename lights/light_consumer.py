@@ -3,7 +3,6 @@ Description: Contains consumer class for light elements
 """
 import threading
 import json
-from typing import Tuple
 from beartype import beartype
 from pal_element import PalElement
 from lights.light_event import LightEvent
@@ -22,7 +21,7 @@ class LightConsumer(PalElement):
 		super().__init__(settings_file=settings_file)
 
 	@beartype
-	def process_event(self, consumer_message: Tuple) -> None:
+	def process_event(self, consumer_message: tuple) -> None:
 		"""
 			Description: Initiats events for the requested light
 			Responsible for:

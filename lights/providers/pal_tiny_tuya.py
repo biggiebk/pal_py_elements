@@ -1,7 +1,7 @@
 """
 Description: Module that supports Magic Hue lights
 """
-from typing import Dict, Any
+
 from beartype import beartype
 import tinytuya
 from lights.providers.light_type import LightType
@@ -13,7 +13,7 @@ class PalTinyTuya(LightType):
 		self.tiny_tuya = None
 
 	@beartype
-	def discover(self, light_properties: Dict[str, Dict[str, Any]]) -> None:
+	def discover(self, light_properties: dict[str, dict[str, any]]) -> None:
 		"""
 			Responsible for discovering lights of this type.
 			Requires:
@@ -31,7 +31,7 @@ class PalTinyTuya(LightType):
 					light_properties[light]['address'] = tuya
 
 	@beartype
-	def set(self, event_dict: Dict[str, Any], light_properties: Dict[str, Any]) -> None:
+	def set(self, event_dict: dict[str, any], light_properties: dict[str, any]) -> None:
 		"""
 		Set the status of a light.
 		"""

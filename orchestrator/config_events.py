@@ -4,9 +4,7 @@ Description: Dynamicly calls the required light class to handle the requested ev
 
 import importlib
 import json
-from typing import Dict, Any
 from beartype import beartype
-from pysondb import JsonDatabase
 from pal_element import PalElement
 
 class LightConfigEvent():
@@ -21,7 +19,7 @@ class LightConfigEvent():
 	"""
 	
 	@beartype
-	def __init__(self, settings, config_dict: Dict[str, Any]) -> None:
+	def __init__(self, settings, config_dict: dict[str, any]) -> None:
 		"""Contruct for the light event"""
 		self.settings = settings
 		self.config_dict = config_dict

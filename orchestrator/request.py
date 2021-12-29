@@ -4,7 +4,6 @@ Description: Dynamicly calls the required light class to handle the requested ev
 
 import importlib
 import json
-from typing import Dict, Any
 from beartype import beartype
 from pal_element import PalElement
 
@@ -19,7 +18,7 @@ class Request():
 			3. Contains method to push to Kafka as producer
 	"""
 	@beartype
-	def __init__(self, settings, event_dict: Dict[str, Any]) -> None:
+	def __init__(self, settings, event_dict: dict[str, any]) -> None:
 		"""Contruct for the light event"""
 		self.settings = settings
 		self.event_dict = event_dict
@@ -48,7 +47,7 @@ class Request():
 			self.light_properties['type']))
 
 	@beartype
-	def get_light_properties(self) -> Dict[str, Any]:
+	def get_light_properties(self) -> dict[str, any]:
 		"""
 			Retrieves the properties for identfied light
 			Responsible for:

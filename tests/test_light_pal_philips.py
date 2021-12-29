@@ -29,12 +29,12 @@ def test_philips_discover(settings, lights):
 
 
 # Run light manipulation tests
-## Turn on with full birghtness
-philips_on = { "event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips",	"name": "office1",
-	"power": True,	"red": 0,	"green": 0,	"blue": 0,	"brightness": 254 }
 ## Adjust brightness to half
 philips_low = { "event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips", "name": "office1",
 	"power": True, "red": 0,	"green": 0,	"blue": 0,	"brightness": 75 }
+## Full birghtness
+philips_on = { "event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips", "name": "office1",
+	"power": True,	"red": 0,	"green": 0,	"blue": 0,	"brightness": 254 }
 ## Turn off
 philips_off = {	"event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips", "name": "office1",
 	"power": False,	"red": 0,	"green": 0,	"blue": 0,	"brightness": 254 }

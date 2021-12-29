@@ -1,7 +1,7 @@
 """
 Description: Contains consumer class for media elements
 """
-from typing import Dict, Union
+from typing import Union
 import vlc
 from beartype import beartype
 
@@ -35,7 +35,7 @@ class PalAudioPlayer():
 			pass # do nothing we know this may blow up if something has not already started to play
 
 	@beartype
-	def set(self, control_dict: Dict[str, Union[str, int]]) -> None:
+	def set(self, control_dict: dict[str, set[str, int]]) -> None:
 		"""
 		Control the audio player. Requries:
 			control_dict = Dictionary detailing what controls to execute

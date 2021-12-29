@@ -1,8 +1,6 @@
 """
 Description: Module that supports Philips lights
 """
-
-from typing import Dict, Any
 from beartype import beartype
 from hue_api import HueApi
 from lights.providers.light_type import LightType
@@ -15,7 +13,7 @@ class PalPhilips(LightType):
 		self.hue = HueApi()
 
 	@beartype
-	def discover(self, light_properties: Dict[str, Dict[str, Any]]) -> None:
+	def discover(self, light_properties: dict[str, dict[str, any]]) -> None:
 		"""
 			Responsible for discovering lights of this type.
 			Requires:
@@ -36,7 +34,7 @@ class PalPhilips(LightType):
 					light_properties[light]['address'] = index
 
 	@beartype
-	def set(self, event_dict: Dict[str, Any], light_properties: Dict[str, Any]) -> None:
+	def set(self, event_dict: dict[str, any], light_properties: dict[str, any]) -> None:
 		"""
 		Set the status of a light.
 		"""
