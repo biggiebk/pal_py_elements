@@ -1,0 +1,10 @@
+[
+	{
+		"name": "lights",
+		"providers": {
+			"lights.providers.pal_magic_hue":["PalMagicHue"],
+			"lights.providers.pal_philips":["PalPhilips"],
+			"lights.providers.pal_tiny_tuya": ["PalTinyTuya"]
+		}
+	}
+]

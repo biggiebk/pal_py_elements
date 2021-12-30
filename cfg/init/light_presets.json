@@ -1,0 +1,24 @@
+[
+    {
+        "name": "red",
+        "power": true,
+        "red": 255,
+        "green": 0,
+        "blue": 0,
+        "brightness": 1.0
+    },{
+        "name": "blue",
+        "power": true,
+        "red": 0,
+        "green": 0,
+        "blue": 255,
+        "brightness": 1.0
+    },{
+        "name": "off",
+        "power": false,
+        "red": 0,
+        "green": 0,
+        "blue": 0,
+        "brightness": 0
+    }
+]    

@@ -1,0 +1,9 @@
+{
+	"host": "127.0.0.1",
+	"port": 50001,
+	"db_name": "pal_elements",
+	"admin_user": "pal_admin",
+	"admin_password": "test_1234",
+	"ele_user": "ele_user",
+	"ele_password": "test_1234"
+}
