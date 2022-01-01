@@ -13,6 +13,11 @@ class PalPhilips(LightType):
 		self.hue = HueApi()
 
 	@beartype
+	def brightness(self) -> None:
+		"""Set brightness level."""
+		self.hue.set_brightness(self.event_dict['brightness'])
+
+	@beartype
 	def discover(self, light_properties: dict[str, dict[str, any]]) -> None:
 		"""
 			Responsible for discovering lights of this type.
@@ -34,6 +39,15 @@ class PalPhilips(LightType):
 					light_properties[light]['address'] = index
 
 	@beartype
+	def on_off(self) -> None:
+		"""Power on or off a light."""
+		if self.event_dict['power']:
+			self.hue.turn_on(self.instance)
+		else:
+			self.hue.turn_off(self.instance)
+
+
+	@beartype
 	def set(self, event_dict: dict[str, any], light_properties: dict[str, any]) -> None:
 		"""
 		Set the status of a light.
@@ -43,21 +57,7 @@ class PalPhilips(LightType):
 		self.hue.load_existing()
 		self.hue.fetch_lights()
 		# Light must be turned on before manipulation
-		self.__on_off()
+		self.on_off()
 		if self.event_dict['power']:
 			# Currently only support the brightness adjustment
-			self.__brightness()
-
-	# Private functions
-	@beartype
-	def __brightness(self) -> None:
-		"""Set brightness level."""
-		self.hue.set_brightness(self.event_dict['brightness'])
-
-	@beartype
-	def __on_off(self) -> None:
-		"""Power on or off a light."""
-		if self.event_dict['power']:
-			self.hue.turn_on(self.instance)
-		else:
-			self.hue.turn_off(self.instance)
+			self.brightness()

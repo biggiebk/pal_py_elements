@@ -18,6 +18,14 @@ class LightType():
 		self.settings = settings
 
 	@beartype
+	def brightness(self) -> None:
+		"""Set brightness level."""
+
+	@beartype
+	def color_rgb(self) -> None:
+		"""Set color using RGB"""
+
+	@beartype
 	def discover(self, light_properties: dict[str, dict[str, any]]) -> None:
 		"""
 			Responsible for discovering lights of this type.
@@ -25,19 +33,22 @@ class LightType():
 				light_properties = A list of dictionaries containing light properties
 		"""
 
+	@beartype
+	def on_off(self) -> None:
+		"""Power on or off a light."""
+
+	@beartype
 	def set(self, event_dict: dict[str, any], light_properties: dict[str, any]) -> None:
 		"""
 		Set the status of a light.
 		"""
 		self.event_dict = event_dict
 		self.light_properties = light_properties
-
-## Private methods
-	def __brightness(self) -> None:
-		"""Set brightness level."""
-
-	def __color_rgb(self) -> None:
-		"""Set color using RGB"""
-
-	def __on_off(self) -> None:
-		"""Power on or off a light."""
+		if self.event_dict['power']:
+			# if mode is white (R, G, and B all equal -1)
+			if (self.event_dict['red'] == -1 and self.event_dict['green'] == -1
+			and self.event_dict['blue'] == -1):
+				self.brightness()
+			else:
+				self.color_rgb()
+		self.on_off()

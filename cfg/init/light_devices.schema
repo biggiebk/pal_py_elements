@@ -1,0 +1,28 @@
+{
+    "$jsonSchema": {
+        "bsonType": "object",
+        "required": [ "name","provider","type","room","iendtifier","address" ],
+        "properties": {
+            "name": {
+                "bsonType": "string",
+                "description": "Name of the light"
+            },
+            "provider": {
+                "bsonType" : "string",
+                "description": "The light provider module path"
+            },
+            "type": {
+                "bsonType" : "string",
+                "description": "The light provider class/type"
+            },
+            "iendtifier": {
+                "bsonType" : "string",
+                "description": "Vendor specific identifier"
+            },
+            "address": {
+                "bsonType" : "string",
+                "description": "The address or location of the device"
+            }
+        }
+    }
+}

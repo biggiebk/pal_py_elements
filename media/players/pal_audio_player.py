@@ -1,7 +1,6 @@
 """
 Description: Contains consumer class for media elements
 """
-from typing import Union
 import vlc
 from beartype import beartype
 
@@ -66,7 +65,7 @@ class PalAudioPlayer():
 		elif self.control_dict['play'] == 'pause':
 			self.media_list_player.pause()
 		else:
-			raise ValueError("Unknown play status: %s" %(self.control_dict['play']))
+			raise ValueError(f"Unknown play status: {self.control_dict['play']}")
 
 	@beartype
 	def __set_loop(self) -> None:
@@ -83,7 +82,7 @@ class PalAudioPlayer():
 		elif self.control_dict['loop'] == 'end':
 			self.media_list_player.set_playback_mode(vlc.PlaybackMode.default)
 		else:
-			raise ValueError("Unknown loop type requested: %s" %(self.control_dict['loop']))
+			raise ValueError(f"Unknown loop type requested: {self.control_dict['loop']}")
 
 	@beartype
 	def __set_media(self) -> None:

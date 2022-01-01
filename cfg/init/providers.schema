@@ -1,0 +1,16 @@
+{
+    "$jsonSchema": {
+        "bsonType": "object",
+        "required": [ "type","providers"  ],
+        "properties": {
+            "type": {
+                "bsonType": "string",
+                "description": "The type of provider"
+            },
+            "providers": {
+                "bsonType" : "object",
+                "description": "A dictionary with the module path as the key and class name as the value"
+            }
+        }
+    }
+}

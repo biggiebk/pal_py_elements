@@ -1,0 +1,40 @@
+{
+    "$jsonSchema": {
+        "bsonType": "object",
+        "required": [ "name","power","red","green","blue","brightness" ],
+        "properties": {
+            "name": {
+                "bsonType": "string",
+                "description": "The name of preset"
+            },
+            "power": {
+                "bsonType" : "bool",
+                "description": "True for on and False for off"
+            },
+            "red": {
+                "bsonType": "int",
+                "minimum": -1,
+                "maximum": 255,
+                "description": "The value for red -1 to 255"
+            },
+            "green": {
+                "bsonType": "int",
+                "minimum": -1,
+                "maximum": 255,
+                "description": "The value for green -1 to 255"
+            },
+            "blue": {
+                "bsonType": "int",
+                "minimum": -1,
+                "maximum": 255,
+                "description": "The value for blue -1 to 255"
+            },
+            "brightness": {
+                "bsonType": "double",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "The value for red -1 to 255"
+            }
+        }
+    }
+ }

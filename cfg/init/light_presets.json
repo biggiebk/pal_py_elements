@@ -19,6 +19,34 @@
         "red": 0,
         "green": 0,
         "blue": 0,
-        "brightness": 0
+        "brightness": 0.0
+    },{
+        "name": "green",
+        "power": true,
+        "red": 0,
+        "green": 255,
+        "blue": 0,
+        "brightness": 1.0
+    },{
+        "name": "bright",
+        "power": true,
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "brightness": 1.0
+    },{
+        "name": "half",
+        "power": true,
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "brightness": 0.5
+    },{
+        "name": "quarter",
+        "power": true,
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "brightness": 0.25
     }
 ]    

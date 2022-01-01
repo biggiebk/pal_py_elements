@@ -41,10 +41,10 @@ class LightEvent():
 			light = getattr(module, self.light_properties['type'])(self.settings)
 			light.set(self.event_dict, self.light_properties)
 		except ModuleNotFoundError:
-			self.__return_error("Unable to locate provider: %s" %(self.light_properties['provider']))
+			self.__return_error(f"Unable to locate provider: {self.light_properties['provider']}")
 		except AttributeError:
-			self.__return_error("Did not find provider %s type %s" %(self.light_properties['provider'],
-			self.light_properties['type']))
+			self.__return_error(f"Did not find provider {self.light_properties['provider']}" +
+				f"type {self.light_properties['type']}")
 
 	@beartype
 	def get_light_properties(self) -> dict[str, any]:
@@ -54,8 +54,8 @@ class LightEvent():
 				1. Opening the properties.json file for requested light
 				2. Returns properties as a dictionary
 		"""
-		with open("%s/lights.json" %(self.settings['data_dir']),
-		'r') as properties:
+		with open(f"{self.settings['data_dir']}/lights.json",
+		'r', encoding='utf-8') as properties:
 			properties_json = properties.read()
 		properties = json.loads(properties_json)
 		return properties[self.event_dict['name']]

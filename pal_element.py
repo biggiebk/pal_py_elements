@@ -58,7 +58,7 @@ class PalElement():
 			Requires:
 				consuer_message
 		"""
-		print("%s - %s" %(self.settings['listen_topic'], consumer_message.value.decode("utf-8")))
+		print(f"{self.settings['listen_topic']} - {consumer_message.value.decode('utf-8')}")
 
 	@beartype
 	def reload(self):
@@ -97,6 +97,7 @@ class PalElement():
 
 	@beartype
 	def stop(self) -> None:
+		"""Closes the the consumer and exits"""
 		self.consumer.close()
 
 	## Private methods, best not to overide anything beyond this point
@@ -110,6 +111,6 @@ class PalElement():
 			Requires:
 				settings_file - Path to the elementals setting file
 		"""
-		with open(self.settings_file, 'r') as settings:
+		with open(self.settings_file, 'r', encoding='utf-8') as settings:
 			settings_json = settings.read()
 		self.settings = json.loads(settings_json)

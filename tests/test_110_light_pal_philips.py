@@ -8,7 +8,7 @@ import time
 from lights.providers.pal_philips import PalPhilips
 
 # Setup Data
-with open('tests/cfg/settings_test.json', 'r') as settings_file:
+with open('tests/cfg/settings_lights_test.json', 'r') as settings_file:
 	settings_json = settings_file.read()
 settings = json.loads(settings_json)
 

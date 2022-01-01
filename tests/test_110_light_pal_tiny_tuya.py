@@ -8,7 +8,7 @@ import time
 from lights.providers.pal_tiny_tuya import PalTinyTuya
 
 # Setup Data
-with open('tests/cfg/settings_test.json', 'r') as settings_file:
+with open('tests/cfg/settings_lights_test.json', 'r') as settings_file:
 	settings_json = settings_file.read()
 settings = json.loads(settings_json)
 
@@ -29,7 +29,7 @@ def test_magic_hue_discover(settings, lights):
 
 # Run light manipulation tests
 ### Turn on with full bright white
-tuya_on = {	"event_type": "control", "provider": "lights.providers.pal_tiny_tuya", "type":"PalTinyTuya",	"name": "office2",
+tuya_on = { "event_type": "control", "provider": "lights.providers.pal_tiny_tuya", "type":"PalTinyTuya",	"name": "office2",
 	"power": True,	"red": -1,	"green": -1,	"blue": -1,	"brightness": 1000 }
 ### Adjust brightness to half
 tuya_low = { "event_type": "control", "provider": "lights.providers.pal_tiny_tuya", "type":"PalTinyTuya",	"name": "office2",
