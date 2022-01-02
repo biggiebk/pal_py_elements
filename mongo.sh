@@ -23,7 +23,7 @@ case $2 in
 
   'init')
     echo -e "\n Initializing DB for $environment"
-    bin/init_elements_db.py $environment
+    ./init_elements_db.py $environment
   ;;
 
   'start')
@@ -59,7 +59,7 @@ case $2 in
     mkdir logs >/dev/null 2>/dev/null
     mongod --config $home/$mongo_conf
     cd $base
-    bin/init_elements_db.py $environment
+    ./init_elements_db.py $environment
   ;;
 
   'running')

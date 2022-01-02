@@ -7,6 +7,8 @@ import json
 from os.path import exists
 from pymongo import MongoClient
 from beartype import beartype
+from kafka import KafkaConsumer
+from kafka.admin import KafkaAdminClient, NewTopic
 
 class InitializeElementsDB():
 	"""
@@ -44,7 +46,7 @@ class InitializeElementsDB():
 		self.pal_db = None
 
 	@beartype
-	def initialize(self):
+	def initialize(self) -> None:
 		"""
 			Description: Initializes the database for elements
 			Responsible for:
@@ -85,21 +87,21 @@ class InitializeElementsDB():
 		self.pal_db = pal_mongo[self.settings['db_name']]
 
 		# create collections and import data
-		with open('cfg/init/collections.json', 'r') as collections_file:
+		with open('cfg/collections.json', 'r') as collections_file:
 			collections_json = collections_file.read()
 		collections = json.loads(collections_json)
 
 		# load unique index info
-		with open('cfg/init/unique_indexes.json', 'r') as unique_indexes_file:
+		with open('cfg/unique_indexes.json', 'r') as unique_indexes_file:
 			unique_indexes_json = unique_indexes_file.read()
 		unique_indexes = json.loads(unique_indexes_json)
 
 		print('Creating Collections')
 		for collection in collections:
 			print("  %s" %(collection))
-			if exists("cfg/init/%s.schema" %(collection)):
+			if exists("cfg/%s.schema.json" %(collection)):
 				print("    Including schema")
-				with open("cfg/init/%s.schema" %(collection), 'r') as schema_file:
+				with open("cfg/%s.schema.json" %(collection), 'r') as schema_file:
 					schema_json = schema_file.read()
 				schema = json.loads(schema_json)
 				self.pal_db.create_collection(collection, validator=schema)
@@ -108,15 +110,96 @@ class InitializeElementsDB():
 			if collection in unique_indexes:
 				print("    Creating unique index on %s" %(unique_indexes[collection]))
 				self.pal_db[collection].create_index(unique_indexes[collection], unique = True)
-			if exists("cfg/init/%s.json" %(collection)):
+			if exists("cfg/%s.json" %(collection)):
 				print("    Importing collection")
-				self.__import_collection(collection)
+				self.__import_collection(collection, "cfg/%s.json" %(collection))
+			if exists("cfg/%s/%s.json" %(self.environment, collection)):
+				print("    Importing enviornment specific collection")
+				self.__import_collection(collection, "cfg/%s/%s.json" %(self.environment, collection))
 
-	def __import_collection(self, name):
+	def __import_collection(self, collection, file) -> None:
 		"""Import collection"""
 		# Load db connection settings
-		with open("cfg/init/%s.json" %(name), 'r') as collection_file:
+		with open(file, 'r') as collection_file:
 			collection_json = collection_file.read()
 		imports = json.loads(collection_json)
-		collection = self.pal_db[name]
+		collection = self.pal_db[collection]
 		collection.insert_many(imports)
+
+class InitializeElementsKafka():
+	"""
+		Description: Initializes Kafka for elements
+		Responsible for:
+			1. Creating topics
+	"""
+	@beartype
+	def __init__(self, environment: str) -> None:
+		"""
+			Description: Contrstruct for initializing Kafka
+			Responsible for:
+				1. Confirm the kafka settings file exists
+				2. Load settings
+				3. Init other variables
+		"""
+
+		self.environment = environment
+
+		# if settings file does not exist exit
+		if not exists("cfg/%s/kafka_settings.json" %(self.environment)):
+			print("Settings file not found: %s" %(sys.argv[1]))
+			exit()
+
+		# Load db connection settings
+		print('Loading kafka settings')
+		with open("cfg/%s/kafka_settings.json" %(self.environment), 'r') as settings_file:
+			settings_json = settings_file.read()
+		self.settings = json.loads(settings_json)
+
+		self.admin_client = KafkaAdminClient(
+			bootstrap_servers=f"{self.settings['connection']['ip']}" +
+				f":{self.settings['connection']['port']}")
+
+
+	@beartype
+	def get_topics(self) -> set:
+		"""
+			Description: Resets Kafaka for elements
+			Responsible for:
+				1. retrieving a list of topics
+		"""
+		print('Getting topics')
+		topics = []
+		consumer = KafkaConsumer(bootstrap_servers=f"{self.settings['connection']['ip']}" +
+			f":{self.settings['connection']['port']}")
+		return consumer.topics()
+
+	@beartype
+	def initialize(self) -> None:
+		"""
+			Description: Initializes Kafaka for elements
+			Responsible for:
+				1. Creates topics
+		"""
+
+		topics = []
+		print('Creating Topics')
+		for topic in self.settings['topics']:
+			print(f"  {self.settings['topics'][topic]}")
+			topics.append(NewTopic(name=self.settings['topics'][topic], num_partitions=1, replication_factor=1))
+
+		self.admin_client.create_topics(new_topics=topics, validate_only=False)
+
+	@beartype
+	def reset(self) -> None:
+		"""
+			Description: Resets Kafaka for elements
+			Responsible for:
+				1. Deletes topics
+		"""
+		topics = []
+		print('Deleting Topics')
+		for topic in self.settings['topics']:
+			print(f"  {self.settings['topics'][topic]}")
+			topics.append(self.settings['topics'][topic])
+
+		self.admin_client.delete_topics(topics)

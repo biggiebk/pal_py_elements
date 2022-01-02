@@ -1,0 +1,11 @@
+{
+	"connection": {
+		"ip": "127.0.0.1",
+		"port": 9092
+	},
+	"topics": {
+		"lights": "element_lights_dev_0",
+		"audio": "element_audio_dev_0",
+		"debug": "element_debug_dev_all"
+	}
+}
