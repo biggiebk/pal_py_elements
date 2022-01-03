@@ -3,7 +3,7 @@ Description: Dynamicly calls the required light class to handle the requested ev
 """
 
 import importlib
-import json
+from pymongo import MongoClient
 from beartype import beartype
 from pal_element import PalElement
 
@@ -19,10 +19,10 @@ class LightEvent():
 	"""
 	@beartype
 	def __init__(self, settings, event_dict: dict[str, any]) -> None:
-		"""Contruct for the light event"""
+		"""Construct for the light event"""
 		self.settings = settings
 		self.event_dict = event_dict
-		self.light_properties = self.get_light_properties()
+		self.device_properties = self.get_device_properties()
 
 	@beartype
 	def trigger(self) -> None:
@@ -34,31 +34,34 @@ class LightEvent():
 				3. If error send update back to return topic
 		'''
 		#Converter the provider name to a module
-		module = importlib.import_module(self.light_properties['provider'])
+		module = importlib.import_module(self.device_properties['provider'])
 
 		# Load the class
 		try:
-			light = getattr(module, self.light_properties['type'])(self.settings)
-			light.set(self.event_dict, self.light_properties)
+			light = getattr(module, self.device_properties['type'])(self.settings)
+			light.set(self.event_dict, self.device_properties)
 		except ModuleNotFoundError:
-			self.__return_error(f"Unable to locate provider: {self.light_properties['provider']}")
+			self.__return_error(f"Unable to locate provider: {self.device_properties['provider']}")
 		except AttributeError:
-			self.__return_error(f"Did not find provider {self.light_properties['provider']}" +
-				f"type {self.light_properties['type']}")
+			self.__return_error(f"Did not find provider {self.device_properties['provider']}" +
+				f"type {self.device_properties['type']}")
 
 	@beartype
-	def get_light_properties(self) -> dict[str, any]:
+	def get_device_properties(self) -> dict[str, any]:
 		"""
 			Retrieves the properties for identfied light
 			Responsible for:
 				1. Opening the properties.json file for requested light
 				2. Returns properties as a dictionary
 		"""
-		with open(f"{self.settings['data_dir']}/lights.json",
-		'r', encoding='utf-8') as properties:
-			properties_json = properties.read()
-		properties = json.loads(properties_json)
-		return properties[self.event_dict['name']]
+		pal_mongo = MongoClient(self.settings['db_host'], self.settings['db_port'],
+		  username=self.settings['ele_user'], password=self.settings['ele_password'])
+		pal_db = pal_mongo[self.settings['ele_db_name']]
+		light_devices = pal_db['light_devices']
+		device = light_devices.find_one({"name": self.event_dict['name']})
+		pal_mongo.close()
+		return device
+
 
 	## Private methods
 

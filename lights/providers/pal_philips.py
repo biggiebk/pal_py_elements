@@ -11,6 +11,8 @@ class PalPhilips(LightType):
 		super().__init__(settings)
 		self.instance = None
 		self.hue = HueApi()
+		self.provider = 'lights.providers.pal_philips'
+		self.type = 'PalPhilips'
 
 	@beartype
 	def brightness(self) -> None:
@@ -18,25 +20,22 @@ class PalPhilips(LightType):
 		self.hue.set_brightness(self.event_dict['brightness'])
 
 	@beartype
-	def discover(self, light_properties: dict[str, dict[str, any]]) -> None:
+	def discover(self) -> None:
 		"""
 			Responsible for discovering lights of this type.
 			Requires:
 				light_properties = A list of dictionaries containing light properties
 		"""
-		super().discover(light_properties)
+		super().discover()
 		# Retrieve list of philip lights
 		self.hue.load_existing()
 		# initiate iterator
 		philips = iter(enumerate(self.hue.fetch_lights()))
 		for index, philip in philips:
 			# Attempt to match each light
-			for light in light_properties:
-				# If type matches PalPhilips and the identifier matches
-				# then set the address to the index/instance number
-				if (light_properties[light]['type'] == 'PalPhilips'
-				and philip.name == light_properties[light]['identifier']):
-					light_properties[light]['address'] = index
+			# Attempt to match each device to a light
+			device = self._find_device_by_identifier(philip.name)
+			self._update_device_address_by_name(device['name'], str(index))
 
 	@beartype
 	def on_off(self) -> None:
@@ -48,12 +47,12 @@ class PalPhilips(LightType):
 
 
 	@beartype
-	def set(self, event_dict: dict[str, any], light_properties: dict[str, any]) -> None:
+	def set(self, event_dict: dict[str, any], device_properties: dict[str, any]) -> None:
 		"""
 		Set the status of a light.
 		"""
-		super().set(event_dict,light_properties)
-		self.instance = self.light_properties['address']
+		super().set(event_dict,device_properties)
+		self.instance = int(device_properties['address'])
 		self.hue.load_existing()
 		self.hue.fetch_lights()
 		# Light must be turned on before manipulation
@@ -61,3 +60,4 @@ class PalPhilips(LightType):
 		if self.event_dict['power']:
 			# Currently only support the brightness adjustment
 			self.brightness()
+		self.bye()

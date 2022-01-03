@@ -10,14 +10,15 @@ from pal_element import PalElement
 from lights.light_consumer import LightConsumer
 from lights.providers.pal_philips import PalPhilips
 
-# Setup Data
-with open('tests/cfg/settings_lights_test.json', 'r') as settings_file:
+# Load settings
+with open('cfg/test/db_settings.json', 'r') as settings_file:
 	settings_json = settings_file.read()
 settings = json.loads(settings_json)
 
-with open('tests/data/lights.json', 'r') as lights_file:
-	lights_json = lights_file.read()
-lights = json.loads(lights_json)
+# Kafka settings
+with open('tests/cfg/settings_lights_test.json', 'r') as kafka_settings_file:
+	kafka_settings_json = kafka_settings_file.read()
+kafka_settings = json.loads(kafka_settings_json)
 
 # Start Light Element Consumer in Daemon thread
 light_consumer = LightConsumer('tests/cfg/settings_lights_test.json')
@@ -29,14 +30,14 @@ thread.start()
 time.sleep(1)
 
 # Run discovery Test
-discovery_args = [(settings,lights)]
+discovery_args = [(settings)]
 
-@pytest.mark.parametrize("settings,lights", discovery_args)
-def test_philips_discover(settings, lights):
+@pytest.mark.parametrize("settings", discovery_args)
+def test_philips_discover(settings):
 	"""Test discover for philips lights"""
 	philips = PalPhilips(settings)
-	philips.discover(lights)
-	assert lights['office1']['address'] != None
+	philips.discover()
+	assert philips.get_device_by_name('office1')['address'] != None
 
 # Run light manipulation tests
 ## Adjust brightness to half
@@ -49,11 +50,11 @@ philips_on = { "event_type": "control", "provider": "lights.providers.pal_philip
 philips_off = {	"event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips","name": "office1",
 	"power": False,	"red": 0, "green": 0, "blue": 0, "brightness": 254 }
 philips_args = [
-	(settings, philips_low, 30),
-	(settings, philips_on, 30),
+	(settings, philips_low, 5),
+	(settings, philips_on, 5),
 	(settings, philips_off, 5)]
 @pytest.mark.parametrize("settings,event,sleep_time", philips_args)
 def test_light_element(settings, event, sleep_time):
 	light_producer = PalElement('tests/cfg/settings_lights_test.json')
-	light_producer.send_txt(settings['listen_topic'], json.dumps(event))
+	light_producer.send_txt(kafka_settings['listen_topic'], json.dumps(event))
 	time.sleep(sleep_time)

@@ -1,6 +1,6 @@
 {
-	"host": "127.0.0.1",
-	"port": 50002,
+	"db_host": "127.0.0.1",
+	"db_port": 50002,
 	"ele_db_name": "pal_elements",
 	"admin_user": "pal_admin",
 	"admin_password": "test_1234",

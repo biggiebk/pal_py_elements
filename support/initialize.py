@@ -56,7 +56,7 @@ class InitializeElementsDB():
 				4. Creating collections, schemas, and indexes
 		"""
 		print('Initial DB connection')
-		self.pal_mongo = MongoClient(self.settings['host'], self.settings['port'])
+		self.pal_mongo = MongoClient(self.settings['db_host'], self.settings['db_port'])
 		# create admin user
 		print("Creating admin user: %s" %(self.settings['admin_user']))
 		self.pal_db = self.pal_mongo['admin']
@@ -69,7 +69,7 @@ class InitializeElementsDB():
 		self.pal_db = None
 		self.pal_mongo.close()
 		print("Print connecting as %s" %(self.settings['admin_user']))
-		self.pal_mongo = MongoClient(self.settings['host'], self.settings['port'],
+		self.pal_mongo = MongoClient(self.settings['db_host'], self.settings['db_port'],
 		  username=self.settings['admin_user'], password=self.settings['admin_password'])
 		self.pal_db = self.pal_mongo['admin']
 		print("Creating read/write user: %s" %(self.settings['ele_user']))
@@ -81,10 +81,10 @@ class InitializeElementsDB():
 		self.pal_db = None
 		self.pal_mongo.close()
 		print("Connecting as: %s" %(self.settings['ele_user']))
-		pal_mongo = MongoClient(self.settings['host'], self.settings['port'],
+		pal_mongo = MongoClient(self.settings['db_host'], self.settings['db_port'],
 		  username=self.settings['ele_user'], password=self.settings['ele_password'])
-		print("Create DB: %s" %(self.settings['db_name']))
-		self.pal_db = pal_mongo[self.settings['db_name']]
+		print("Create DB: %s" %(self.settings['ele_db_name']))
+		self.pal_db = pal_mongo[self.settings['ele_db_name']]
 
 		# create collections and import data
 		with open('cfg/collections.json', 'r') as collections_file:

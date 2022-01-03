@@ -13,6 +13,8 @@ class PalMagicHue(LightType):
 	def __init__(self, settings):
 		super().__init__(settings)
 		self.magic_hue = None
+		self.provider = 'lights.providers.pal_magic_hue'
+		self.type = 'PalMagicHue'
 
 	@beartype
 	def brightness(self) -> None:
@@ -32,13 +34,11 @@ class PalMagicHue(LightType):
 		print(self.magic_hue.update_status)
 
 	@beartype
-	def discover(self, light_properties: dict[str, dict[str, any]]) -> None:
+	def discover(self) -> None:
 		"""
 			Responsible for discovering lights of this type.
-			Requires:
-				light_properties = A list of dictionaries containing light properties
 		"""
-		super().discover(light_properties)
+		super().discover()
 		# Search for bulbs on the network
 
 		# The magichue library does not support identification of bulbs, so we have to code our own
@@ -63,13 +63,10 @@ class PalMagicHue(LightType):
 		sock.close()
 
 		for bulb in bulbs:
-			# Attempt to match each bulb to a light
-			for light in light_properties:
-				fields = bulb.split(",")
-				# If type matches PalMagic and the identifier matches then set the address to the IP filied
-				if (light_properties[light]['type'] == 'PalMagicHue'
-				and fields[1] == light_properties[light]['identifier']):
-					light_properties[light]['address'] = fields[0]
+			# Attempt to match each device to a light
+			fields = bulb.split(",")
+			device = self._find_device_by_identifier(fields[1])
+			self._update_device_address_by_name(device['name'],fields[0])
 
 	@beartype
 	def on_off(self) -> None:
@@ -77,9 +74,10 @@ class PalMagicHue(LightType):
 		self.magic_hue.on = self.event_dict['power']
 
 	@beartype
-	def set(self, event_dict: dict[str, any], light_properties: dict[str, any]) -> None:
+	def set(self, event_dict: dict[str, any], device_properties: dict[str, any]) -> None:
 		"""
 		Set the status of a light.
 		"""
-		self.magic_hue = magichue.Light(light_properties['address'])
-		super().set(event_dict,light_properties)
+		self.magic_hue = magichue.Light(device_properties['address'])
+		super().set(event_dict,device_properties)
+		self.bye()

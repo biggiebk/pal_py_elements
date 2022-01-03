@@ -1,0 +1,30 @@
+[
+	{
+		"name": "office1",
+		"provider": "lights.providers.pal_philips",
+		"type": "PalPhilips",
+		"property": "home",
+		"room": "office",
+		"identifier": "Office 1",
+		"address": ""
+	},{
+		"name": "office2",
+		"provider": "lights.providers.pal_tiny_tuya",
+		"type": "PalTinyTuya",
+		"property": "home",
+		"room": "office",
+		"identifier": "80437255483fda12b7f4",
+		"auth": {
+			"key": "c29ca15c31b0a505"
+		},
+		"address": ""
+	},{
+		"name": "office3",
+		"provider": "lights.providers.pal_magic_hue",
+		"type": "PalMagicHue",
+		"property": "home",
+		"room": "office",
+		"identifier": "40F520C96F1B",
+		"address": ""
+	}
+]

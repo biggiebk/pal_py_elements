@@ -11,6 +11,8 @@ class PalTinyTuya(LightType):
 	def __init__(self, settings):
 		super().__init__(settings)
 		self.tiny_tuya = None
+		self.provider = 'lights.providers.pal_tiny_tuya'
+		self.type = 'PalTinyTuya'
 
 	@beartype
 	def brightness(self):
@@ -24,22 +26,19 @@ class PalTinyTuya(LightType):
 		self.event_dict['blue'])
 
 	@beartype
-	def discover(self, light_properties: dict[str, dict[str, any]]) -> None:
+	def discover(self) -> None:
 		"""
 			Responsible for discovering lights of this type.
 			Requires:
 				light_properties = A list of dictionaries containing light properties
 		"""
-		super().discover(light_properties)
+		super().discover()
 		# Search for devices on the network
-		tuyas = tinytuya.deviceScan(False, 50)
+		tuyas = tinytuya.deviceScan(False, 5)
 		for tuya in tuyas.items():
 			# Attempt to match each device to a light
-			for light in light_properties:
-				# If type matches PalTinyTuya and the identifier matches then set the address to the IP
-				if (light_properties[light]['type'] == 'PalTinyTuya'
-				and tuya[1]['gwId'] == light_properties[light]['identifier']):
-					light_properties[light]['address'] = tuya[0]
+			device = self._find_device_by_identifier(tuya[1]['gwId'])
+			self._update_device_address_by_name(device['name'],tuya[0])
 
 	@beartype
 	def on_off(self) -> None:
@@ -50,11 +49,12 @@ class PalTinyTuya(LightType):
 			self.tiny_tuya.turn_off()
 
 	@beartype
-	def set(self, event_dict: dict[str, any], light_properties: dict[str, any]) -> None:
+	def set(self, event_dict: dict[str, any], device_properties: dict[str, any]) -> None:
 		"""
 		Set the status of a light.
 		"""
-		self.tiny_tuya = tinytuya.BulbDevice(light_properties['identifier'],
-		light_properties['address'], light_properties['key'])
+		self.tiny_tuya = tinytuya.BulbDevice(device_properties['identifier'],
+		device_properties['address'], device_properties['auth']['key'])
 		self.tiny_tuya.set_version(3.3)
-		super().set(event_dict,light_properties)
+		super().set(event_dict,device_properties)
+		self.bye()

@@ -1,7 +1,12 @@
 {
 	"kafka_address": "127.0.0.1:9092",
-	"listen_topic": "LightsTopic",
-	"debug_topic": "DebugTopic",
+	"listen_topic": "element_lights_test_0",
+	"debug_topic": "element_debug_test_all",
 	"data_dir": "tests/data",
-	"cfg_dir": "tests/cfg"
+	"cfg_dir": "tests/cfg",
+	"ele_user": "ele_user",
+	"ele_password": "test_1234",
+	"ele_db_name": "pal_elements",
+	"db_host": "127.0.0.1",
+	"db_port": 50001
 }
