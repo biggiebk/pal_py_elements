@@ -28,7 +28,6 @@ pal_mongo = MongoClient(settings['db_host'], settings['db_port'],
   username=settings['ele_user'], password=settings['ele_password'])
 ele_db = pal_mongo[settings['ele_db_name']]
 light_devices = ele_db['light_devices']
-office1 = light_devices.find_one({"name": "office1"})
 ## Adjust brightness to half
 philips_low = { "event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips", "name": "office1",
 	"power": True, "red": 0,	"green": 0,	"blue": 0,	"brightness": 75 }
@@ -39,13 +38,14 @@ philips_on = { "event_type": "control", "provider": "lights.providers.pal_philip
 philips_off = {	"event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips", "name": "office1",
 	"power": False,	"red": 0,	"green": 0,	"blue": 0,	"brightness": 254 }
 philips_args = [
-	(settings, office1, philips_low, 5),
-	(settings, office1, philips_on, 5),
-	(settings, office1, philips_off, 0)]
-@pytest.mark.parametrize("settings,device,event,sleep_time", philips_args)
-def test_philips_manipulation(settings, device, event, sleep_time):
+	(settings, philips_low, 5),
+	(settings, philips_on, 5),
+	(settings, philips_off, 0)]
+@pytest.mark.parametrize("settings,event,sleep_time", philips_args)
+def test_philips_manipulation(settings, event, sleep_time):
 	"""Test to manipulate philips lights"""
 	philips = PalPhilips(settings)
+	device = light_devices.find_one({"name": "office1"})
 	# Power on
 	assert philips.set(event, device) == None
 	# Allow for some time to see changes
