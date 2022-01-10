@@ -9,7 +9,7 @@ from pymongo import MongoClient
 from lights.providers.pal_tiny_tuya import PalTinyTuya
 
 # Load settings
-with open('cfg/test/db_settings.json', 'r') as settings_file:
+with open('cfg/test/settings.json', 'r') as settings_file:
 	settings_json = settings_file.read()
 settings = json.loads(settings_json)
 
@@ -26,9 +26,9 @@ def test_magic_hue_discover(settings):
 
 
 # Run light manipulation tests
-pal_mongo = MongoClient(settings['db_host'], settings['db_port'],
-  username=settings['ele_user'], password=settings['ele_password'])
-ele_db = pal_mongo[settings['ele_db_name']]
+pal_mongo = MongoClient(settings['database']['db_host'], settings['database']['db_port'],
+  username=settings['database']['ele_user'], password=settings['database']['ele_password'])
+ele_db = pal_mongo[settings['database']['ele_db_name']]
 light_devices = ele_db['light_devices']
 ## Turn on with full bright white
 tuya_on = { "event_type": "control", "provider": "lights.providers.pal_tiny_tuya", "type":"PalTinyTuya",	"name": "office2",

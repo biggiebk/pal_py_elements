@@ -32,13 +32,13 @@ class InitializeElementsDB():
 		self.environment = environment
 
 		# if settings file does not exist exit
-		if not exists("cfg/%s/db_settings.json" %(self.environment)):
+		if not exists("cfg/%s/settings.json" %(self.environment)):
 			print("Settings file not found: %s" %(sys.argv[1]))
 			exit()
 
 		# Load db connection settings
 		print('Loading DB settings')
-		with open("cfg/%s/db_settings.json" %(self.environment), 'r') as settings_file:
+		with open("cfg/%s/settings.json" %(self.environment), 'r') as settings_file:
 			settings_json = settings_file.read()
 		self.settings = json.loads(settings_json)
 
@@ -56,35 +56,35 @@ class InitializeElementsDB():
 				4. Creating collections, schemas, and indexes
 		"""
 		print('Initial DB connection')
-		self.pal_mongo = MongoClient(self.settings['db_host'], self.settings['db_port'])
+		self.pal_mongo = MongoClient(self.settings['database']['db_host'], self.settings['database']['db_port'])
 		# create admin user
-		print("Creating admin user: %s" %(self.settings['admin_user']))
+		print("Creating admin user: %s" %(self.settings['database']['admin_user']))
 		self.pal_db = self.pal_mongo['admin']
-		self.pal_db.command("createUser", self.settings['admin_user'],
-			pwd=self.settings['admin_password'], roles=[{'role': "userAdminAnyDatabase", 'db': "admin"},
+		self.pal_db.command("createUser", self.settings['database']['admin_user'],
+			pwd=self.settings['database']['admin_password'], roles=[{'role': "userAdminAnyDatabase", 'db': "admin"},
 			"readWriteAnyDatabase"])
 
 		# disconnect and create pal element user
 		print("Disconnecting")
 		self.pal_db = None
 		self.pal_mongo.close()
-		print("Print connecting as %s" %(self.settings['admin_user']))
-		self.pal_mongo = MongoClient(self.settings['db_host'], self.settings['db_port'],
-		  username=self.settings['admin_user'], password=self.settings['admin_password'])
+		print("Print connecting as %s" %(self.settings['database']['admin_user']))
+		self.pal_mongo = MongoClient(self.settings['database']['db_host'], self.settings['database']['db_port'],
+		  username=self.settings['database']['admin_user'], password=self.settings['database']['admin_password'])
 		self.pal_db = self.pal_mongo['admin']
-		print("Creating read/write user: %s" %(self.settings['ele_user']))
-		self.pal_db.command("createUser", self.settings['ele_user'], pwd=self.settings['ele_password'],
+		print("Creating read/write user: %s" %(self.settings['database']['ele_user']))
+		self.pal_db.command("createUser", self.settings['database']['ele_user'], pwd=self.settings['database']['ele_password'],
 			roles=[{ 'role': "readWrite", 'db': "pal_elements" }])
 
 		# disconnect, connect as elements user, and create collections
 		print('Disconnecting')
 		self.pal_db = None
 		self.pal_mongo.close()
-		print("Connecting as: %s" %(self.settings['ele_user']))
-		pal_mongo = MongoClient(self.settings['db_host'], self.settings['db_port'],
-		  username=self.settings['ele_user'], password=self.settings['ele_password'])
-		print("Create DB: %s" %(self.settings['ele_db_name']))
-		self.pal_db = pal_mongo[self.settings['ele_db_name']]
+		print("Connecting as: %s" %(self.settings['database']['ele_user']))
+		pal_mongo = MongoClient(self.settings['database']['db_host'], self.settings['database']['db_port'],
+		  username=self.settings['database']['ele_user'], password=self.settings['database']['ele_password'])
+		print("Create DB: %s" %(self.settings['database']['ele_db_name']))
+		self.pal_db = pal_mongo[self.settings['database']['ele_db_name']]
 
 		# create collections and import data
 		with open('cfg/collections.json', 'r') as collections_file:
@@ -145,19 +145,19 @@ class InitializeElementsKafka():
 		self.environment = environment
 
 		# if settings file does not exist exit
-		if not exists("cfg/%s/kafka_settings.json" %(self.environment)):
+		if not exists("cfg/%s/settings.json" %(self.environment)):
 			print("Settings file not found: %s" %(sys.argv[1]))
 			exit()
 
 		# Load db connection settings
 		print('Loading kafka settings')
-		with open("cfg/%s/kafka_settings.json" %(self.environment), 'r') as settings_file:
+		with open("cfg/%s/settings.json" %(self.environment), 'r') as settings_file:
 			settings_json = settings_file.read()
 		self.settings = json.loads(settings_json)
 
 		self.admin_client = KafkaAdminClient(
-			bootstrap_servers=f"{self.settings['connection']['ip']}" +
-				f":{self.settings['connection']['port']}")
+			bootstrap_servers=f"{self.settings['kafka']['connection']['ip']}" +
+				f":{self.settings['kafka']['connection']['port']}")
 
 
 	@beartype
@@ -169,8 +169,8 @@ class InitializeElementsKafka():
 		"""
 		print('Getting topics')
 		topics = []
-		consumer = KafkaConsumer(bootstrap_servers=f"{self.settings['connection']['ip']}" +
-			f":{self.settings['connection']['port']}")
+		consumer = KafkaConsumer(bootstrap_servers=f"{self.settings['kafka']['connection']['ip']}" +
+			f":{self.settings['kafka']['connection']['port']}")
 		return consumer.topics()
 
 	@beartype
@@ -183,9 +183,9 @@ class InitializeElementsKafka():
 
 		topics = []
 		print('Creating Topics')
-		for topic in self.settings['topics']:
-			print(f"  {self.settings['topics'][topic]}")
-			topics.append(NewTopic(name=self.settings['topics'][topic], num_partitions=1, replication_factor=1))
+		for topic in self.settings['kafka']['topics']:
+			print(f"  {self.settings['kafka']['topics'][topic]}")
+			topics.append(NewTopic(name=self.settings['kafka']['topics'][topic], num_partitions=1, replication_factor=1))
 
 		self.admin_client.create_topics(new_topics=topics, validate_only=False)
 
@@ -198,8 +198,8 @@ class InitializeElementsKafka():
 		"""
 		topics = []
 		print('Deleting Topics')
-		for topic in self.settings['topics']:
-			print(f"  {self.settings['topics'][topic]}")
-			topics.append(self.settings['topics'][topic])
+		for topic in self.settings['kafka']['topics']:
+			print(f"  {self.settings['kafka']['topics'][topic]}")
+			topics.append(self.settings['kafka']['topics'][topic])
 
 		self.admin_client.delete_topics(topics)

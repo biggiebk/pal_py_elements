@@ -1,0 +1,22 @@
+{
+	"database": {
+		"db_host": "127.0.0.1",
+		"db_port": 50000,
+		"ele_db_name": "pal_elements",
+		"admin_user": "pal_admin",
+		"admin_password": "test_1234",
+		"ele_user": "ele_user",
+		"ele_password": "test_1234"
+	},
+	"kafka": {
+		"connection": {
+			"ip": "127.0.0.1",
+			"port": 9092
+		},
+		"topics": {
+			"lights": "element_lights_dev_0",
+			"audio": "element_audio_dev_0",
+			"debug": "element_debug_dev_all"
+		}
+	}
+}

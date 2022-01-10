@@ -16,8 +16,8 @@ class AudioConsumer(PalElement):
 			3. Contains method to push to Kafka as producer
 	"""
 	@beartype
-	def __init__(self, settings_file: str) -> None:
-		super().__init__(settings_file=settings_file)
+	def __init__(self, settings_file: str, topic: str) -> None:
+		super().__init__(settings_file=settings_file, topic=topic)
 		self.pal_player = PalAudioPlayer("")
 
 	@beartype

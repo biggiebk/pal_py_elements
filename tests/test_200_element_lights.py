@@ -11,17 +11,12 @@ from lights.light_consumer import LightConsumer
 from lights.providers.pal_philips import PalPhilips
 
 # Load settings
-with open('cfg/test/db_settings.json', 'r') as settings_file:
+with open('cfg/test/settings.json', 'r') as settings_file:
 	settings_json = settings_file.read()
 settings = json.loads(settings_json)
 
-# Kafka settings
-with open('tests/cfg/settings_lights_test.json', 'r') as kafka_settings_file:
-	kafka_settings_json = kafka_settings_file.read()
-kafka_settings = json.loads(kafka_settings_json)
-
 # Start Light Element Consumer in Daemon thread
-light_consumer = LightConsumer('tests/cfg/settings_lights_test.json')
+light_consumer = LightConsumer('cfg/test/settings.json', settings['kafka']['topics']['elemental_lights'])
 # Start the consumer
 thread = threading.Thread(target=light_consumer.listen, args=())
 thread.setDaemon(True)
@@ -55,6 +50,6 @@ philips_args = [
 	(settings, philips_off, 5)]
 @pytest.mark.parametrize("settings,event,sleep_time", philips_args)
 def test_light_element(settings, event, sleep_time):
-	light_producer = PalElement('tests/cfg/settings_lights_test.json')
-	light_producer.send_txt(kafka_settings['listen_topic'], json.dumps(event))
+	light_producer = PalElement('cfg/test/settings.json', settings['kafka']['topics']['elemental_lights'])
+	light_producer.send_txt(settings['kafka']['topics']['elemental_audio'], json.dumps(event))
 	time.sleep(sleep_time)

@@ -13,12 +13,12 @@ from media.audio_consumer import AudioConsumer
 from pal_element import PalElement
 
 # Setup Data
-with open('tests/cfg/settings_audio_test.json', 'r') as settings_file:
+with open('cfg/test/settings.json', 'r') as settings_file:
 	settings_json = settings_file.read()
 settings = json.loads(settings_json)
 
 # Start Audio Element Consumer in Daemon thread
-audio_consumer = AudioConsumer('tests/cfg/settings_audio_test.json')
+audio_consumer = AudioConsumer('cfg/test/settings.json', settings['kafka']['topics']['elemental_audio'])
 # Start the consumer
 thread = threading.Thread(target=audio_consumer.listen, args=())
 thread.setDaemon(True)
@@ -49,6 +49,6 @@ audio_tests = [
 	(settings, stop, 1) ]
 @pytest.mark.parametrize("settings,event,sleep_time", audio_tests)
 def test_light_element(settings, event, sleep_time):
-	audio_producer = PalElement('tests/cfg/settings_audio_test.json')
-	audio_producer.send_txt(settings['listen_topic'], json.dumps(event))
+	audio_producer = PalElement('cfg/test/settings.json', settings['kafka']['topics']['elemental_audio'])
+	audio_producer.send_txt(settings['kafka']['topics']['elemental_audio'], json.dumps(event))
 	time.sleep(sleep_time)

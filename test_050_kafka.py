@@ -52,3 +52,5 @@ kafka = json.loads(kafka_json)
 def test_topics_exist(topic):
 	existing_topics = initialize_element_kafka.get_topics()
 	assert kafka['kafka']['topics'][topic] in existing_topics
+
+kafka_event()

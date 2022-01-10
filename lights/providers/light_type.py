@@ -51,7 +51,7 @@ class LightType():
 		Get device by indentifier, provider, and type
 		"""
 		self._connect_db()
-		ele_db = self.pal_mongo[self.settings['ele_db_name']]
+		ele_db = self.pal_mongo[self.settings['database']['ele_db_name']]
 		light_devices = ele_db['light_devices']
 		device = light_devices.find_one({"name": name})
 
@@ -83,8 +83,8 @@ class LightType():
 	@beartype
 	def _connect_db(self) -> None:
 		if self.pal_mongo is None:
-			self.pal_mongo = MongoClient(self.settings['db_host'], self.settings['db_port'],
-				username=self.settings['ele_user'], password=self.settings['ele_password'])
+			self.pal_mongo = MongoClient(self.settings['database']['db_host'], self.settings['database']['db_port'],
+				username=self.settings['database']['ele_user'], password=self.settings['database']['ele_password'])
 
 	@beartype
 	def _create_unknown_device(self, identifier: str) -> dict[str, any]:
@@ -93,7 +93,7 @@ class LightType():
 		"""
 		# Create a new device
 		self._connect_db()
-		ele_db = self.pal_mongo[self.settings['ele_db_name']]
+		ele_db = self.pal_mongo[self.settings['database']['ele_db_name']]
 		light_devices = ele_db['light_devices']
 		device = {}
 		device['name'] = datetime.datetime.today().strftime(f"Unknown_{self.type}" +
@@ -114,7 +114,7 @@ class LightType():
 		Get device by indentifier, provider, and type
 		"""
 		self._connect_db()
-		ele_db = self.pal_mongo[self.settings['ele_db_name']]
+		ele_db = self.pal_mongo[self.settings['database']['ele_db_name']]
 		light_devices = ele_db['light_devices']
 		search = {}
 		search['identifier'] = identifier
@@ -134,6 +134,6 @@ class LightType():
 		Update the device with an address using the name
 		"""
 		self._connect_db()
-		ele_db = self.pal_mongo[self.settings['ele_db_name']]
+		ele_db = self.pal_mongo[self.settings['database']['ele_db_name']]
 		light_devices = ele_db['light_devices']
 		light_devices.update_one({"name": name}, {'$set': {"address": address}})

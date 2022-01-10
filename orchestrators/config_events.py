@@ -7,8 +7,20 @@ import json
 from beartype import beartype
 from pal_element import PalElement
 
-class LightConfigEvent():
+class ConfigEvent():
+	"""
+		Description: Parent class for config events
+		Responsible for:
+			1. Establishes a standard construct
+			2. Sets up shared methods
+	"""
+	@beartype
+	def __init__(self, settings, config_dict: dict[str, any]) -> None:
+		"""Construct for the light event"""
+		self.settings = settings
+		self.config_dict = config_dict
 
+class LightConfigEvent(ConfigEvent):
 	"""
 		Description: Updates the status of lights
 		Responsible for:
