@@ -11,7 +11,7 @@ case $2 in
 		cd ~/kafka/
 		# Start Zookeeper
 		nohup bin/zookeeper-server-start.sh config/zookeeper.properties  > zookeeper.log 2> zookeeper.err&
-		sleep 10
+		sleep 60
 		# Start kafka
 		nohup bin/kafka-server-start.sh config/server.properties > kafka.log 2> kafka.err &
   ;;
@@ -21,7 +21,7 @@ case $2 in
     echo -e "\nStopping"
 		# Stop kafka
 		nohup bin/kafka-server-stop.sh config/server.properties > kafka.stop.log 2> kafka.stop.err &
-		sleep 10
+		sleep 60
 		# Stop Zookeeper
 		nohup bin/zookeeper-server-stop.sh config/zookeeper.properties  > zookeeper.stop.log 2> zookeeper.stop.err&
   ;;

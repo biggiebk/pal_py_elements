@@ -54,9 +54,9 @@ class LightEvent():
 				1. Opening the properties.json file for requested light
 				2. Returns properties as a dictionary
 		"""
-		pal_mongo = MongoClient(self.settings['db_host'], self.settings['db_port'],
-		  username=self.settings['ele_user'], password=self.settings['ele_password'])
-		pal_db = pal_mongo[self.settings['ele_db_name']]
+		pal_mongo = MongoClient(self.settings['database']['db_host'], self.settings['database']['db_port'],
+		  username=self.settings['database']['ele_user'], password=self.settings['database']['ele_password'])
+		pal_db = pal_mongo[self.settings['database']['ele_db_name']]
 		light_devices = pal_db['light_devices']
 		device = light_devices.find_one({"name": self.event_dict['name']})
 		pal_mongo.close()

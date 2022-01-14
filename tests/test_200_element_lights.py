@@ -16,7 +16,7 @@ with open('cfg/test/settings.json', 'r') as settings_file:
 settings = json.loads(settings_json)
 
 # Start Light Element Consumer in Daemon thread
-light_consumer = LightConsumer('cfg/test/settings.json', settings['kafka']['topics']['elemental_lights'])
+light_consumer = LightConsumer('cfg/test/settings.json', 'elemental_lights')
 # Start the consumer
 thread = threading.Thread(target=light_consumer.listen, args=())
 thread.setDaemon(True)
@@ -51,5 +51,5 @@ philips_args = [
 @pytest.mark.parametrize("settings,event,sleep_time", philips_args)
 def test_light_element(settings, event, sleep_time):
 	light_producer = PalElement('cfg/test/settings.json', settings['kafka']['topics']['elemental_lights'])
-	light_producer.send_txt(settings['kafka']['topics']['elemental_audio'], json.dumps(event))
+	light_producer.send_txt(settings['kafka']['topics']['elemental_lights'], json.dumps(event))
 	time.sleep(sleep_time)
