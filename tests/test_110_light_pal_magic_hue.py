@@ -27,7 +27,7 @@ def test_magic_hue_discover(settings):
 pal_mongo = MongoClient(settings['database']['db_host'], settings['database']['db_port'],
   username=settings['database']['ele_user'], password=settings['database']['ele_password'])
 ele_db = pal_mongo[settings['database']['ele_db_name']]
-light_devices = ele_db['light_devices']
+light_devices = ele_db['devices']
 ## Turn on with full bright white
 magic_hue_on = { "event_type": "control", "provider": "lights.providers.pal_magic_hue", "type":"PalMagicHue",	"name": "office3",
 	"power": True,	"red": -1,	"green": -1,	"blue": -1,	"brightness": 255 }

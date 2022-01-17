@@ -1,5 +1,5 @@
 {
-    "light_devices": "name",
+    "devices": "name",
     "providers": "type",
     "light_presets": "name"
 }

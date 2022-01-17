@@ -27,7 +27,7 @@ def test_philips_discover(settings):
 pal_mongo = MongoClient(settings['database']['db_host'], settings['database']['db_port'],
   username=settings['database']['ele_user'], password=settings['database']['ele_password'])
 ele_db = pal_mongo[settings['database']['ele_db_name']]
-light_devices = ele_db['light_devices']
+light_devices = ele_db['devices']
 ## Adjust brightness to half
 philips_low = { "event_type": "control", "provider": "lights.providers.pal_philips", "type":"PalPhilips", "name": "office1",
 	"power": True, "red": 0,	"green": 0,	"blue": 0,	"brightness": 75 }

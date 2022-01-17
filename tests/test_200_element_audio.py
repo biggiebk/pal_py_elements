@@ -18,9 +18,9 @@ with open('cfg/test/settings.json', 'r') as settings_file:
 settings = json.loads(settings_json)
 
 # Start Audio Element Consumer in Daemon thread
-audio_consumer = AudioConsumer('cfg/test/settings.json', settings['kafka']['topics']['elemental_audio'])
+audio_consumer = AudioConsumer('cfg/test/settings.json')
 # Start the consumer
-thread = threading.Thread(target=audio_consumer.listen, args=())
+thread = threading.Thread(target=audio_consumer.listen, args=(['elemental_audio']))
 thread.setDaemon(True)
 thread.start()
 # Just give it a brief pause
@@ -49,6 +49,6 @@ audio_tests = [
 	(settings, stop, 1) ]
 @pytest.mark.parametrize("settings,event,sleep_time", audio_tests)
 def test_light_element(settings, event, sleep_time):
-	audio_producer = PalElement('cfg/test/settings.json', settings['kafka']['topics']['elemental_audio'])
+	audio_producer = PalElement('cfg/test/settings.json')
 	audio_producer.send_txt(settings['kafka']['topics']['elemental_audio'], json.dumps(event))
 	time.sleep(sleep_time)

@@ -16,8 +16,10 @@
 		"topics": {
 			"elemental_lights": "element_lights_test_0",
 			"elemental_audio": "element_audio_test_0",
+			"elemental_config_orch": "element_config_orch_test_0",
 			"elemental_debug": "element_debug_test_all",
-			"test": "test_topic"
+			"test": "test_topic",
+			"preset_test": "test_topic_preset"
 		}
 	}
 }

@@ -16,7 +16,7 @@ class PalElement():
 			3. Contains method to push to Kafka as producer
 	"""
 	@beartype
-	def __init__(self, settings_file: str, topic: str) -> None:
+	def __init__(self, settings_file: str) -> None:
 		"""
 			Construct for elemental classes.
 			Responsible for:
@@ -30,10 +30,9 @@ class PalElement():
 		self.__load_settings()
 		self.settings['settings_file'] = settings_file
 		self.consumer = None
-		self.topic = topic
 
 	@beartype
-	def listen(self) -> None:
+	def listen(self, topic: str) -> None:
 		"""
 			Description: Connects to Kafka and consumes a topic
 			Responsible for:
@@ -42,8 +41,8 @@ class PalElement():
 			Requires:
 				Nothing
 		"""
-		self.consumer = KafkaConsumer(self.settings['kafka']['topics'][self.topic],
-			bootstrap_servers=self.settings['kafka']['connection']['ip'] + 
+		self.consumer = KafkaConsumer(self.settings['kafka']['topics'][topic],
+			bootstrap_servers=self.settings['kafka']['connection']['ip'] +
 			f":{self.settings['kafka']['connection']['port']}")
 		for msg in self.consumer:
 			self.process_event(msg)
@@ -80,7 +79,7 @@ class PalElement():
 				1. topic - Name of the topic to send message/event to (string)
 				2. event_bytes - array of bytes
 		"""
-		producer = KafkaProducer(bootstrap_servers=self.settings['kafka']['connection']['ip'] + 
+		producer = KafkaProducer(bootstrap_servers=self.settings['kafka']['connection']['ip'] +
 			f":{self.settings['kafka']['connection']['port']}")
 		producer.send(topic, event_bytes)
 		producer.flush()

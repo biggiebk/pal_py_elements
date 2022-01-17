@@ -28,13 +28,13 @@ def kafka_event():
 	"""
 		function to enable testing of both the producer and consumer in elements
 	"""
-	kafka_consumer = PalElement('cfg/test/settings.json', 'test')
+	kafka_consumer = PalElement('cfg/test/settings.json')
 	# Start the consumer
-	thread = threading.Thread(target=kafka_consumer.listen, args=())
+	thread = threading.Thread(target=kafka_consumer.listen, args=(['test']))
 	thread.setDaemon(True)
 	thread.start()
 	time.sleep(1)
-	kafka_producer = PalElement('cfg/test/settings.json', 'test')
+	kafka_producer = PalElement('cfg/test/settings.json')
 	kafka_producer.send_txt("test_topic","I see you")
 	time.sleep(1)
 

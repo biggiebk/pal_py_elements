@@ -6,7 +6,8 @@
 		"property": "home",
 		"room": "office",
 		"identifier": "Office 1",
-		"address": ""
+		"address": "",
+		"device_type": "light"
 	},{
 		"name": "office2",
 		"provider": "lights.providers.pal_tiny_tuya",
@@ -17,7 +18,8 @@
 		"auth": {
 			"key": "c29ca15c31b0a505"
 		},
-		"address": ""
+		"address": "",
+		"device_type": "light"
 	},{
 		"name": "office3",
 		"provider": "lights.providers.pal_magic_hue",
@@ -25,6 +27,7 @@
 		"property": "home",
 		"room": "office",
 		"identifier": "40F520C96F1B",
-		"address": ""
+		"address": "",
+		"device_type": "light"
 	}
 ]

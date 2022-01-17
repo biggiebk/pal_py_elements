@@ -52,7 +52,7 @@ class LightType():
 		"""
 		self._connect_db()
 		ele_db = self.pal_mongo[self.settings['database']['ele_db_name']]
-		light_devices = ele_db['light_devices']
+		light_devices = ele_db['devices']
 		device = light_devices.find_one({"name": name})
 
 		# return the result
@@ -83,8 +83,9 @@ class LightType():
 	@beartype
 	def _connect_db(self) -> None:
 		if self.pal_mongo is None:
-			self.pal_mongo = MongoClient(self.settings['database']['db_host'], self.settings['database']['db_port'],
-				username=self.settings['database']['ele_user'], password=self.settings['database']['ele_password'])
+			self.pal_mongo = MongoClient(self.settings['database']['db_host'],
+				self.settings['database']['db_port'], username=self.settings['database']['ele_user'],
+				password=self.settings['database']['ele_password'])
 
 	@beartype
 	def _create_unknown_device(self, identifier: str) -> dict[str, any]:
@@ -94,7 +95,7 @@ class LightType():
 		# Create a new device
 		self._connect_db()
 		ele_db = self.pal_mongo[self.settings['database']['ele_db_name']]
-		light_devices = ele_db['light_devices']
+		light_devices = ele_db['devices']
 		device = {}
 		device['name'] = datetime.datetime.today().strftime(f"Unknown_{self.type}" +
 			'-%H-%M-%S-%f-%b-%d-%Y')
@@ -103,6 +104,7 @@ class LightType():
 		device['type'] = self.type
 		device['room'] = "Unknown"
 		device['property'] = "Unknown"
+		device['device_type'] = "Unknown"
 		device['address'] = ""
 		# add to the database
 		light_devices.insert_one(device)
@@ -115,7 +117,7 @@ class LightType():
 		"""
 		self._connect_db()
 		ele_db = self.pal_mongo[self.settings['database']['ele_db_name']]
-		light_devices = ele_db['light_devices']
+		light_devices = ele_db['devices']
 		search = {}
 		search['identifier'] = identifier
 		search['provider'] = self.provider
@@ -135,5 +137,5 @@ class LightType():
 		"""
 		self._connect_db()
 		ele_db = self.pal_mongo[self.settings['database']['ele_db_name']]
-		light_devices = ele_db['light_devices']
+		light_devices = ele_db['devices']
 		light_devices.update_one({"name": name}, {'$set': {"address": address}})

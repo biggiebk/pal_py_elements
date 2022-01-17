@@ -17,8 +17,8 @@ class LightConsumer(PalElement):
 			3. Contains method to push to Kafka as producer
 	"""
 	@beartype
-	def __init__(self, settings_file: str, topic: str) -> None:
-		super().__init__(settings_file=settings_file, topic=topic)
+	def __init__(self, settings_file: str) -> None:
+		super().__init__(settings_file=settings_file)
 
 	@beartype
 	def process_event(self, consumer_message: tuple) -> None:
