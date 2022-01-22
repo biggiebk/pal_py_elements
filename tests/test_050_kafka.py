@@ -17,7 +17,7 @@ initialize_element_kafka = InitializeElementsKafka('test')
 initialize_element_kafka.reset()
 
 # sleep for a bit
-time.sleep(10)
+time.sleep(30)
 
 # Lets initialize kafka
 initialize_element_kafka.initialize()

@@ -7,7 +7,7 @@ from pymongo import MongoClient
 from beartype import beartype
 from pal_element import PalElement
 
-class ConfigPreset():
+class ConfigEvent():
 	"""
 		Description: Parent class for config events
 		Responsible for:
@@ -16,13 +16,14 @@ class ConfigPreset():
 	"""
 
 	@beartype
-	def __init__(self, settings: dict[str, any]) -> None:
+	def __init__(self, settings: dict[str, any], collection) -> None:
 		"""Construct for the config event"""
 		self.settings = settings
 		self.pal_mongo = MongoClient(self.settings['database']['db_host'],
 			self.settings['database']['db_port'], username=self.settings['database']['ele_user'],
 			password=self.settings['database']['ele_password'])
 		self.pal_db = self.pal_mongo[self.settings['database']['ele_db_name']]
+		self.pal_collection = self.pal_db[collection]
 		self.params = None
 
 	@beartype
@@ -41,20 +42,38 @@ class ConfigPreset():
 			self._return_error(f"{self.params['action']}: is an unknown preset action for " +
 				 f"{self.params['element']} element.")
 
+	@beartype
 	def create(self):
 		"""Create a preset configuration"""
+		self.pal_collection.insert_one(self.params['settings'])
 
 	@beartype
 	def delete(self):
 		"""Delete a preset configuration"""
+		preset = {'name': self.params['name']}
+		self.pal_collection.delete_one(preset)
 
 	@beartype
 	def get(self):
 		"""Get preset configurations"""
+		if 'name' in self.params:
+			find_preset = {'name': self.params['name']}
+			result = self.pal_collection.find_one(find_preset)
+			result.pop('_id')
+			self._return_response([result])
+		else: # Return them all
+			results = []
+			# This part does not feel very python like
+			for record in self.pal_collection.find():
+				record.pop('_id')
+				results.append(record)
+			self._return_response(results)
 
 	@beartype
 	def update(self):
 		"""Update a preset configuration"""
+		update = {'$set': self.params['settings']}
+		self.pal_collection.update_one({'name': self.params['settings']['name']}, update)
 
 ## Private methods
 
@@ -79,48 +98,3 @@ class ConfigPreset():
 		response['response'] = value
 		producer = PalElement(self.settings['settings_file'])
 		producer.send_txt(self.params['return_topic'], json.dumps(response))
-
-class LightConfigPreset(ConfigPreset):
-	"""
-		Description: Handle requests to create, update, delete, or get light presets
-	"""
-
-	@beartype
-	def __init__(self, settings: dict[str, any]) -> None:
-		"""Contsruct for the light configuration events"""
-		super().__init__(settings)
-		self.pal_presets = self.pal_db['light_presets']
-
-	@beartype
-	def create(self):
-		"""Create a preset configuration"""
-		print(self.params)
-		self.pal_presets.insert_one(self.params['settings'])
-
-	@beartype
-	def delete(self):
-		"""Delete a preset configuration"""
-		preset = {'name': self.params['name']}
-		self.pal_presets.delete_one(preset)
-
-	@beartype
-	def get(self):
-		"""Get preset configurations"""
-		if 'name' in self.params:
-			find_preset = {'name': self.params['name']}
-			result = self.pal_presets.find_one(find_preset)
-			result.pop('_id')
-			self._return_response([result])
-		else: # Return them all
-			results = []
-			# This part does not feel very python like
-			for record in self.pal_presets.find():
-				record.pop('_id')
-				results.append(record)
-			self._return_response(results)
-
-	@beartype
-	def update(self):
-		"""Update a preset configuration"""
-		update = {'$set': self.params['settings']}
-		self.pal_presets.update_one({'name': self.params['settings']['name']}, update)

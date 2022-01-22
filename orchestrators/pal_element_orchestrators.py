@@ -6,7 +6,7 @@ import threading
 import json
 from beartype import beartype
 from pal_element import PalElement
-from orchestrators.config_presets import LightConfigPreset
+from orchestrators.config_event import ConfigEvent
 
 class PalElementConfigOrchestrator(PalElement):
 	"""
@@ -30,20 +30,8 @@ class PalElementConfigOrchestrator(PalElement):
 				consumer_message
 		"""
 		params = json.loads(consumer_message.value.decode("utf-8"))
-		if params['element'] == 'light':
-			light_config_preset = LightConfigPreset(self.settings)
-			thread = threading.Thread(target=light_config_preset.trigger, args=([params]))
-			thread.setDaemon(True)
-			thread.start()
-#		elif params['element'] == 'audio':
-#			audio_config_event = AudioConfigEvent(self.settings, params)
-#			thread = threading.Thread(target=audio_config_event.trigger(), args=())
-#			thread.setDaemon(True)
-#			thread.start()
-#		elif params['element'] == 'scene':
-#			scene_config_event = SceneConfigEvent(self.settings, params)
-#			thread = threading.Thread(target=scene_config_event.trigger(), args=())
-#			thread.setDaemon(True)
-#			thread.start()
-		else:
-			pass
+		print(f"{params['element']}_{params['request_type']}")
+		light_config_preset = ConfigEvent(self.settings, f"{params['element']}_{params['request_type']}")
+		thread = threading.Thread(target=light_config_preset.trigger, args=([params]))
+		thread.setDaemon(True)
+		thread.start()

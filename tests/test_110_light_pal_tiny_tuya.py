@@ -29,7 +29,7 @@ def test_magic_hue_discover(settings):
 pal_mongo = MongoClient(settings['database']['db_host'], settings['database']['db_port'],
   username=settings['database']['ele_user'], password=settings['database']['ele_password'])
 ele_db = pal_mongo[settings['database']['ele_db_name']]
-light_devices = ele_db['devices']
+light_devices = ele_db['device_cfgs']
 ## Turn on with full bright white
 tuya_on = { "event_type": "control", "provider": "lights.providers.pal_tiny_tuya", "type":"PalTinyTuya",	"name": "office2",
 	"power": True,	"red": -1,	"green": -1,	"blue": -1,	"brightness": 1000 }

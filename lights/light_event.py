@@ -58,7 +58,7 @@ class LightEvent():
 			self.settings['database']['db_port'], username=self.settings['database']['ele_user'],
 			password=self.settings['database']['ele_password'])
 		pal_db = pal_mongo[self.settings['database']['ele_db_name']]
-		light_devices = pal_db['devices']
+		light_devices = pal_db['device_cfgs']
 		device = light_devices.find_one({"name": self.event_dict['name']})
 		pal_mongo.close()
 		return device

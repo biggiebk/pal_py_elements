@@ -52,7 +52,7 @@ class LightType():
 		"""
 		self._connect_db()
 		ele_db = self.pal_mongo[self.settings['database']['ele_db_name']]
-		light_devices = ele_db['devices']
+		light_devices = ele_db['device_cfgs']
 		device = light_devices.find_one({"name": name})
 
 		# return the result
@@ -95,7 +95,7 @@ class LightType():
 		# Create a new device
 		self._connect_db()
 		ele_db = self.pal_mongo[self.settings['database']['ele_db_name']]
-		light_devices = ele_db['devices']
+		light_devices = ele_db['device_cfgs']
 		device = {}
 		device['name'] = datetime.datetime.today().strftime(f"Unknown_{self.type}" +
 			'-%H-%M-%S-%f-%b-%d-%Y')
@@ -117,7 +117,7 @@ class LightType():
 		"""
 		self._connect_db()
 		ele_db = self.pal_mongo[self.settings['database']['ele_db_name']]
-		light_devices = ele_db['devices']
+		light_devices = ele_db['device_cfgs']
 		search = {}
 		search['identifier'] = identifier
 		search['provider'] = self.provider
@@ -137,5 +137,5 @@ class LightType():
 		"""
 		self._connect_db()
 		ele_db = self.pal_mongo[self.settings['database']['ele_db_name']]
-		light_devices = ele_db['devices']
+		light_devices = ele_db['device_cfgs']
 		light_devices.update_one({"name": name}, {'$set': {"address": address}})

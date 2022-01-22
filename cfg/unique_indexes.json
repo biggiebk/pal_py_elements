@@ -1,5 +1,7 @@
 {
-    "devices": "name",
+    "device_cfgs": "name",
     "providers": "type",
-    "light_presets": "name"
+    "light_presets": "name",
+    "property_cfgs": "name",
+    "room_cfgs": "name"
 }

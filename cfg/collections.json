@@ -1,5 +1,7 @@
 [
-		"devices",
+		"device_cfgs",
 		"providers",
-		"light_presets"
+		"light_presets",
+		"property_cfgs",
+		"room_cfgs"
 ]

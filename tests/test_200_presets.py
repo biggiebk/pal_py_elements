@@ -51,7 +51,7 @@ thread.setDaemon(True)
 thread.start()
 
 # Create new
-new_preset = {"request_type": "preset", "action": "create", "element": "light",
+new_preset = {"request_type": "presets", "action": "create", "element": "light",
 	"return_topic": settings['kafka']['topics']['preset_test'], "session": "hello", "tracking_id": "0",
 		"settings": {"name": "Test_Color", "power": True, "red": 0, "green": 255, "blue": 255,
 			"brightness": 1.0 } }
@@ -59,7 +59,7 @@ pal_light_producer.send_txt(settings['kafka']['topics']['elemental_config_orch']
 time.sleep(1)
 
 # Initiate check for new
-get_preset = {"request_type": "preset", "action": "get", "element": "light",
+get_preset = {"request_type": "presets", "action": "get", "element": "light",
 	"return_topic": settings['kafka']['topics']['preset_test'], "name": new_preset['settings']['name'], "session": "hello",
 	"tracking_id": "1"}
 pal_light_producer.send_txt(settings['kafka']['topics']['elemental_config_orch'], json.dumps(get_preset))
@@ -73,26 +73,26 @@ pal_light_producer.send_txt(settings['kafka']['topics']['elemental_config_orch']
 time.sleep(1)
 
 # Initiate check for updated
-get_preset = {"request_type": "preset", "action": "get", "element": "light", "tracking_id": "3",
+get_preset = {"request_type": "presets", "action": "get", "element": "light", "tracking_id": "3",
 	"return_topic": settings['kafka']['topics']['preset_test'], "name": new_preset['settings']['name'], "session": "hello"}
 pal_light_producer.send_txt(settings['kafka']['topics']['elemental_config_orch'], json.dumps(get_preset))
 
 
 # Get all values before delete
-get_presets = {"request_type": "preset", "action": "get", "element": "light",
+get_presets = {"request_type": "presets", "action": "get", "element": "light",
 	"return_topic": settings['kafka']['topics']['preset_test'], "session": "hello", "tracking_id": "4"}
 pal_light_producer.send_txt(settings['kafka']['topics']['elemental_config_orch'], json.dumps(get_presets))
 time.sleep(5)
 
 # Delete new
-delete_preset = {"request_type": "preset", "action": "delete", "element": "light",
+delete_preset = {"request_type": "presets", "action": "delete", "element": "light",
 	"tracking_id": "5", "return_topic": settings['kafka']['topics']['preset_test'],
 	"name": new_preset['settings']['name']}
 pal_light_producer.send_txt(settings['kafka']['topics']['elemental_config_orch'], json.dumps(delete_preset))
 time.sleep(1)
 
 # Get all values after delete
-get_presets = {"request_type": "preset", "action": "get", "element": "light",
+get_presets = {"request_type": "presets", "action": "get", "element": "light",
 	"return_topic": settings['kafka']['topics']['preset_test'], "session": "hello", "tracking_id": "6"}
 pal_light_producer.send_txt(settings['kafka']['topics']['elemental_config_orch'], json.dumps(get_presets))
 time.sleep(5)
@@ -110,7 +110,7 @@ def test_update_light_preset():
 		if item['tracking_id'] == "3":
 			assert item['response'][0]['red'] == new_preset['settings']['red']
 
-def test_update_get_all_light_preset():
+def test_get_all_light_preset():
 	for response in responses:
 		item = json.loads(response)
 		if item['tracking_id'] == "6":
