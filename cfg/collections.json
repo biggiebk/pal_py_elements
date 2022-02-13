@@ -1,7 +1,8 @@
 [
-		"device_cfgs",
-		"providers",
-		"light_presets",
-		"property_cfgs",
-		"room_cfgs"
+	"audio_library",
+	"device_cfgs",
+	"light_presets",
+	"property_cfgs",
+	"providers",
+	"room_cfgs"
 ]

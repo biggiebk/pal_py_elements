@@ -1,0 +1,28 @@
+{
+    "$jsonSchema": {
+        "bsonType": "object",
+        "required": [ "name","description","lenght"],
+        "properties": {
+            "name": {
+                "bsonType": "string",
+                "description": "Name of the file"
+            },
+            "author": {
+                "bsonType" : "string",
+                "description": "Author or band"
+            },
+            "description": {
+                "bsonType" : "string",
+                "description": "Discription for the audio"
+            },
+            "key_words": {
+                "bsonType" : "array",
+                "description": "List of key words"
+            },
+            "length": {
+                "bsonType" : "long",
+                "description": "Length of the audio in seconds"
+            }
+        }
+    }
+}
