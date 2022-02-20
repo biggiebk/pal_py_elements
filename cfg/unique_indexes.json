@@ -3,5 +3,7 @@
     "providers": "type",
     "light_presets": "name",
     "property_cfgs": "name",
-    "room_cfgs": "name"
+    "room_cfgs": "name",
+    "scene_presets": "name",
+    "audio_library": "name"
 }

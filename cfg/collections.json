@@ -1,8 +1,10 @@
 [
 	"audio_library",
+	"audio_presets",
 	"device_cfgs",
 	"light_presets",
 	"property_cfgs",
 	"providers",
-	"room_cfgs"
+	"room_cfgs",
+	"scene_presets"
 ]
